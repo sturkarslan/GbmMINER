@@ -1,0 +1,3 @@
+,Mutation,Regulator,Regulon,MutationRegulatorEdge,-log10(p)_MutationRegulatorEdge,RegulatorRegulon_Spearman_R,RegulatorRegulon_Spearman_p-value,Regulon_stratification_t-statistic,-log10(p)_Regulon_stratification,Fraction_of_edges_correctly_aligned
+3480,RHOA_SIGNALING_PATHWAY_PID_NCI_NATURE_nonsilent_somatic,ENSG00000203883,3480,1.0,1.8575958259751266,0.11423360216400416,0.0074328701632500145,2.3510833864848317,1.6791234678441367,1.0
+3376,RHOA_SIGNALING_PATHWAY_PID_NCI_NATURE_nonsilent_somatic,ENSG00000137273,3376,1.0,1.897416603280849,0.4518914728241265,6.218274453371455e-29,2.146003510925081,1.457054763817645,1.0

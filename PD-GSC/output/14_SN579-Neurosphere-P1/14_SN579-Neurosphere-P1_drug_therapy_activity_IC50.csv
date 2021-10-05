@@ -1,0 +1,11 @@
+Drug,DrugMechOfAction,DrugTargetAll,Cancer_PhaseIV,DrugRegulonAll,DrugProgramAll,DrugProgramOverActive,DrugProgramUnderActive,DrugRegulonOverActive,DrugRegulonUnderActive,DrugConstrainedRegulonActivity,DRUG CANDIDATE,IC50,sample
+VORINOSTAT,Histone deacetylase 2 inhibitor,HDAC2,#N/A,2158,77,77,NA,2158,NA,1,Vorinostat,1.64e-5,SN579
+SORAFENIB,Serine/threonine-protein kinase RAF inhibitor,RAF1,AntiCancerPhaseIV,1889,64,64,NA,1889,NA,1,Sorafenib,7.9e-6,SN579
+HYDROXYCHLOROQUINE,Toll-like receptor 7 antagonist,TLR7,AntiCancerPhaseIV,"34,115,290,378,402,436,440,457,480,536,652,787",2,2,NA,"34,115,290,378,402,436,440,457,480,536",NA,0.8108108108108109,Hydroxychloroquine,0.004,SN579
+CELECOXIB,Cyclooxygenase-2 inhibitor,PTGS2,AntiCancerPhaseIV,"34,98,290,378,402,457,480,505,536,549,623,652,700,787",2,2,NA,"34,98,290,378,402,457,480,505,536,549,700",NA,0.7608695652173914,Celecoxib,1.03e-5,SN579
+METFORMIN,Mitochondrial glycerol-3-phosphate dehydrogenase inhibitor,"GPD2,NDUFA4L2,NDUFC1",AntiCancerPhaseIV,"47,410,714,1224,1558,1576,1640,2588,2695,3206","78,81,104,159","104,159",NA,"47,410,714,1224,1576,1640",NA,0.6521739130434783,Metformin,862e14,SN579
+ERLOTINIB,Epidermal growth factor receptor erbB1 inhibitor,EGFR,AntiCancerPhaseIV,"943,1100,1153,1163,1173,1398,1482,1519,1545,1558,1559,1560,1570,2523,2528,2597,2604,2823,2830,3675","45,48,54,60,66,72,77,78,80,89,93,103,133,153,168","45,48,60,72,77,133",153,"1153,1482,1545,2523,2528,2823",NA,0.3,Erlotinib,2.7e-5,SN579
+DOCETAXEL,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,NA,NA,NA,NA,0,Docetaxel,143e23,SN579
+PACLITAXEL,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,NA,NA,NA,NA,0,Paclitaxel,5.281e-4,SN579
+COLCHICINE,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,NA,NA,NA,NA,0,Colchicine,6.729e-7,SN579
+VINORELBINE,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,NA,NA,NA,NA,0,Vinorelbine,5.1e-6,SN579

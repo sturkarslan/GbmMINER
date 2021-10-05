@@ -1,0 +1,11 @@
+Drug,DrugMechOfAction,DrugTargetAll,Cancer_PhaseIV,DrugRegulonAll,DrugProgramAll,DrugProgramOverActive,DrugProgramUnderActive,DrugRegulonOverActive,DrugRegulonUnderActive,DrugConstrainedRegulonActivity,DRUG CANDIDATE,IC50,sample
+ERLOTINIB,Epidermal growth factor receptor erbB1 inhibitor,EGFR,AntiCancerPhaseIV,"943,1100,1153,1163,1173,1398,1482,1519,1545,1558,1559,1560,1570,2523,2528,2597,2604,2823,2830,3675","45,48,54,60,66,72,77,78,80,89,93,103,133,153,168","45,48,54,60,66,72,77,78,80,89,93,103,133,153,168",NA,"943,1100,1153,1163,1173,1398,1482,1519,1545,1558,1559,1560,1570,2523,2528,2597,2604,2823,2830,3675",NA,1,Erlotinib,2.64e-5,SN598
+METFORMIN,Mitochondrial glycerol-3-phosphate dehydrogenase inhibitor,"GPD2,NDUFA4L2,NDUFC1",AntiCancerPhaseIV,"47,410,714,1224,1558,1576,1640,2588,2695,3206","78,81,104,159","78,81,104,159",NA,"47,410,714,1224,1558,1576,1640,2588,2695,3206",NA,1,Metformin,0.0046,SN598
+VORINOSTAT,Histone deacetylase 2 inhibitor,HDAC2,#N/A,2158,77,77,NA,2158,NA,1,Vorinostat,9.5e-6,SN598
+CELECOXIB,Cyclooxygenase-2 inhibitor,PTGS2,AntiCancerPhaseIV,"34,98,290,378,402,457,480,505,536,549,623,652,700,787",2,2,NA,"34,98,290,378,402,457,480,505,536,549,623,652,700,787",NA,1,Celecoxib,2.48e-5,SN598
+SORAFENIB,Serine/threonine-protein kinase RAF inhibitor,RAF1,AntiCancerPhaseIV,1889,64,64,NA,1889,NA,1,Sorafenib,6.6e-6,SN598
+HYDROXYCHLOROQUINE,Toll-like receptor 7 antagonist,TLR7,AntiCancerPhaseIV,"34,115,290,378,402,436,440,457,480,536,652,787",2,2,NA,"34,115,290,378,402,436,440,457,480,536,652,787",NA,1,Hydroxychloroquine,3.3e-6,SN598
+DOCETAXEL,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,24,NA,"1485,3545",NA,1,Docetaxel,0.0671,SN598
+PACLITAXEL,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,24,NA,"1485,3545",NA,1,Paclitaxel,178.5,SN598
+COLCHICINE,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,24,NA,"1485,3545",NA,1,Colchicine,103500000000000,SN598
+VINORELBINE,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,24,NA,"1485,3545",NA,1,Vinorelbine,0.0099,SN598

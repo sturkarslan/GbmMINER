@@ -1,0 +1,11 @@
+Drug,DrugMechOfAction,DrugTargetAll,Cancer_PhaseIV,DrugRegulonAll,DrugProgramAll,DrugProgramOverActive,DrugProgramUnderActive,DrugRegulonOverActive,DrugRegulonUnderActive,DrugConstrainedRegulonActivity,DRUG CANDIDATE,IC50,sample
+SORAFENIB,Serine/threonine-protein kinase RAF inhibitor,RAF1,AntiCancerPhaseIV,1889,64,64,NA,1889,NA,1,Sorafenib,2.4,SN517
+METFORMIN,Mitochondrial glycerol-3-phosphate dehydrogenase inhibitor,"GPD2,NDUFA4L2,NDUFC1",AntiCancerPhaseIV,"47,410,714,1224,1558,1576,1640,2588,2695,3206","78,81,104,159","78,81,104,159",NA,"47,410,714,1224,1558,1576,1640,2695,3206",NA,0.9130434782608695,Metformin,0.0013,SN517
+ERLOTINIB,Epidermal growth factor receptor erbB1 inhibitor,EGFR,AntiCancerPhaseIV,"943,1100,1153,1163,1173,1398,1482,1519,1545,1558,1559,1560,1570,2523,2528,2597,2604,2823,2830,3675","45,48,54,60,66,72,77,78,80,89,93,103,133,153,168","45,48,54,60,72,77,78,80",153,"1153,1482,1545,1558,2523,2823",NA,0.3,Erlotinib,1.37e-5,SN517
+VORINOSTAT,Histone deacetylase 2 inhibitor,HDAC2,#N/A,2158,77,77,NA,NA,NA,0,Vorinostat,2.13e-5,SN517
+DOCETAXEL,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,NA,NA,NA,NA,0,Docetaxel,407e128,SN517
+PACLITAXEL,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,NA,NA,NA,NA,0,Paclitaxel,9.812e-7,SN517
+COLCHICINE,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,NA,NA,NA,NA,0,Colchicine,62e14,SN517
+VINORELBINE,Tubulin inhibitor,TUBB6,AntiCancerPhaseIV,"1485,3545",24,NA,NA,NA,NA,0,Vinorelbine,2e-9,SN517
+CELECOXIB,Cyclooxygenase-2 inhibitor,PTGS2,AntiCancerPhaseIV,"34,98,290,378,402,457,480,505,536,549,623,652,700,787",2,NA,2,NA,"34,290,457,480,505,549,700,787",-0.5217391304347826,Celecoxib,2.53e-5,SN517
+HYDROXYCHLOROQUINE,Toll-like receptor 7 antagonist,TLR7,AntiCancerPhaseIV,"34,115,290,378,402,436,440,457,480,536,652,787",2,NA,2,NA,"34,115,290,436,440,457,480,787",-0.6216216216216216,Hydroxychloroquine,3.3e-6,SN517
