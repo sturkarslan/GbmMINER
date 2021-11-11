@@ -13,9 +13,10 @@ from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import time
 from collections import Counter
+from tqdm.notebook import tqdm, trange
 #import seaborn as sns
 
-os.chdir('/Users/serdarturkaslan/Documents/GitHub/GbmMINER/data/MINER_MicroLowessRNATMM.08.24.2020/')
+#os.chdir('/Users/serdarturkaslan/Documents/GitHub/GbmMINER/data/MINER_MicroLowessRNATMM.08.24.2020/')
 # =============================================================================
 # Functions used for reading and writing files
 # =============================================================================
@@ -664,7 +665,7 @@ def unmix(df,iterations=25,returnAll=False):
         maxSum = df.index[np.argmax(np.array(sumDf1))]
         hits = np.where(df.loc[maxSum]>0)[0]
         hitIndex = list(df.index[hits])
-        print(hitIndex)
+        #print(hitIndex)
         block = df.loc[hitIndex,hitIndex]
         blockSum = block.sum(axis=1)
         coreBlock = list(blockSum.index[np.where(blockSum>=np.median(blockSum))[0]])
@@ -692,8 +693,10 @@ def remix(df,frequencyClusters):
         finalClusters.sort(key = lambda s: -len(s))
     return finalClusters
 
-def decompose(geneset,expressionData,minNumberGenes=6,pct_threshold=80): 
-    fm = FrequencyMatrix(expressionData.loc[geneset,:])
+def decompose(geneset,expressionData,minNumberGenes=6,pct_threshold=80):
+    #print("Running decompose function...\n")
+    
+    fm = FrequencyMatrix(expressionData.loc[geneset,:])  
     tst = np.multiply(fm,fm.T)
     tst[tst<np.percentile(tst,pct_threshold)]=0
     tst[tst>0]=1
@@ -702,8 +705,9 @@ def decompose(geneset,expressionData,minNumberGenes=6,pct_threshold=80):
     return unmixedFiltered
 
 def recursiveDecomposition(geneset,expressionData,minNumberGenes=6,pct_threshold=80):
-
-    unmixedFiltered = decompose(geneset,expressionData,minNumberGenes,pct_threshold)   
+    #print("Running Recursive Decompose function...\n")
+    
+    unmixedFiltered = decompose(geneset,expressionData,minNumberGenes,pct_threshold)
     if len(unmixedFiltered) == 0:
         return []
     shortSets = [i for i in unmixedFiltered if len(i)<50]
@@ -793,6 +797,8 @@ def reconstruction(decomposedList,expressionData,threshold=0.925):
     return recombine
 
 def recursiveAlignment(geneset,expressionData,minNumberGenes=6,pct_threshold=80):
+    #print("Running RecursiveAlignment function...\n")
+    
     recDecomp = recursiveDecomposition(geneset,expressionData,minNumberGenes,pct_threshold)
     if len(recDecomp) == 0:
         return []
@@ -885,7 +891,7 @@ def recursiveAlignment(geneset,expressionData,minNumberGenes=6,pct_threshold=80)
 #    return bestHits
 
 def cluster(expressionData,minNumberGenes = 6,minNumberOverExpSamples=4,maxSamplesExcluded=0.50,random_state=12,overExpressionThreshold=80,pct_threshold=80):
-
+    print("Running cluster function...\n")
 
     df = expressionData.copy()
     maxStep = int(np.round(10*maxSamplesExcluded))
@@ -897,13 +903,13 @@ def cluster(expressionData,minNumberGenes = 6,minNumberOverExpSamples=4,maxSampl
 
     startTimer = time.time()
     trial = -1
-    for step in range(maxStep):
+    for step in tqdm(range(maxStep)):
+        time.sleep(0.01)
         trial+=1
         progress = (100./maxStep)*trial
         print('{:.2f} percent complete'.format(progress))
         genesMapped = []
         bestMapped = []
-
         pca = PCA(10,random_state=random_state)
         principalComponents = pca.fit_transform(df.T)
         principalDf = pd.DataFrame(principalComponents)
@@ -917,7 +923,6 @@ def cluster(expressionData,minNumberGenes = 6,minNumberOverExpSamples=4,maxSampl
             lowpass = min(np.percentile(pearson,5),-0.1)
             cluster1 = np.array(df.index[np.where(pearson>highpass)[0]])
             cluster2 = np.array(df.index[np.where(pearson<lowpass)[0]])
-
             for clst in [cluster1,cluster2]:
                 pdc = recursiveAlignment(clst,expressionData=df,minNumberGenes=minNumberGenes,pct_threshold=pct_threshold)
                 if len(pdc)==0:
@@ -3627,7 +3632,7 @@ def kmplot(srv,groups,labels,xlim_=None,filename=None,color=None,lw=1,alpha=1,fs
     for i in range(len(groups)):
         group = groups[i]
         patients = list(set(srv.index)&set(group))
-        print(patients)
+        #print(patients)
         kmDf = kmAnalysis(survivalDf=srv.loc[patients,["duration","observed"]],durationCol="duration",statusCol="observed")
         subset = kmDf[kmDf.loc[:,"observed"]==1]
         duration = np.concatenate([np.array([0]),np.array(subset.loc[:,"duration"])])
