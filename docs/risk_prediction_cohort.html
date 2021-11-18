@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Serdar Turkarslan" />
+
+
+<title>Risk Prediction</title>
+
+<script src="site_libs/header-attrs-2.7/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-sm-12 col-md-4 col-lg-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-sm-12 col-md-8 col-lg-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">GbmMINER</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li>
+  <a href="about.html">About</a>
+</li>
+<li>
+  <a href="license.html">License</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Risk Prediction</h1>
+<h4 class="author">Serdar Turkarslan</h4>
+<h4 class="date">11/4/2021</h4>
+
+</div>
+
+
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-report" data-toggle="collapse" data-target="#workflowr-report">
+<span class="glyphicon glyphicon-list" aria-hidden="true"></span> workflowr <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span>
+</button>
+</p>
+<div id="workflowr-report" class="collapse">
+<ul class="nav nav-tabs">
+<li class="active">
+<a data-toggle="tab" href="#summary">Summary</a>
+</li>
+<li>
+<a data-toggle="tab" href="#checks"> Checks <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> </a>
+</li>
+<li>
+<a data-toggle="tab" href="#versions">Past versions</a>
+</li>
+</ul>
+<div class="tab-content">
+<div id="summary" class="tab-pane fade in active">
+<p>
+<strong>Last updated:</strong> 2021-11-17
+</p>
+<p>
+<strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 6 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 1
+</p>
+<p>
+<strong>Knit directory:</strong> <code>GbmMINER/</code> <span class="glyphicon glyphicon-question-sign" aria-hidden="true" title="This is the local directory in which the code in this file was executed."> </span>
+</p>
+<p>
+This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis was created with <a
+  href="https://github.com/jdblischak/workflowr">workflowr</a> (version 1.6.2). The <em>Checks</em> tab describes the reproducibility checks that were applied when the results were created. The <em>Past versions</em> tab lists the development history.
+</p>
+<hr>
+</div>
+<div id="checks" class="tab-pane fade">
+<div id="workflowr-checks" class="panel-group">
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRMarkdownfilestronguncommittedchanges"> <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> <strong>R Markdown file:</strong> uncommitted changes </a>
+</p>
+</div>
+<div id="strongRMarkdownfilestronguncommittedchanges" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The R Markdown is untracked by Git. To know which version of the R Markdown file created these results, you’ll want to first commit it to the Git repo. If you’re still working on the analysis, you can ignore this warning. When you’re finished, you can run <code>wflow_publish</code> to commit the R Markdown file and build the HTML.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongEnvironmentstrongempty"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Environment:</strong> empty </a>
+</p>
+</div>
+<div id="strongEnvironmentstrongempty" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! The global environment was empty. Objects defined in the global environment can affect the analysis in your R Markdown file in unknown ways. For reproduciblity it’s best to always run the code in an empty environment.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSeedstrongcodesetseed20211005code"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Seed:</strong> <code>set.seed(20211005)</code> </a>
+</p>
+</div>
+<div id="strongSeedstrongcodesetseed20211005code" class="panel-collapse collapse">
+<div class="panel-body">
+<p>The command <code>set.seed(20211005)</code> was run prior to running the code in the R Markdown file. Setting a seed ensures that any results that rely on randomness, e.g. subsampling or permutations, are reproducible.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongSessioninformationstrongrecorded"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Session information:</strong> recorded </a>
+</p>
+</div>
+<div id="strongSessioninformationstrongrecorded" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Recording the operating system, R version, and package versions is critical for reproducibility.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongCachestrongnone"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Cache:</strong> none </a>
+</p>
+</div>
+<div id="strongCachestrongnone" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Nice! There were no cached chunks for this analysis, so you can be confident that you successfully produced the results during this run.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongFilepathsstrongrelative"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>File paths:</strong> relative </a>
+</p>
+</div>
+<div id="strongFilepathsstrongrelative" class="panel-collapse collapse">
+<div class="panel-body">
+<p>Great job! Using relative paths to the files within your workflowr project makes it easier to run your code on other machines.</p>
+</div>
+</div>
+</div>
+<div class="panel panel-default">
+<div class="panel-heading">
+<p class="panel-title">
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomsturkarslanGbmMINERtreea09b4fa96818877a243a36278db3b13a80c640f0targetblanka09b4faa"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/sturkarslan/GbmMINER/tree/a09b4fa96818877a243a36278db3b13a80c640f0" target="_blank">a09b4fa</a> </a>
+</p>
+</div>
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomsturkarslanGbmMINERtreea09b4fa96818877a243a36278db3b13a80c640f0targetblanka09b4faa" class="panel-collapse collapse">
+<div class="panel-body">
+<p>
+Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
+</p>
+<p>
+The results in this page were generated with repository version <a href="https://github.com/sturkarslan/GbmMINER/tree/a09b4fa96818877a243a36278db3b13a80c640f0" target="_blank">a09b4fa</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+</p>
+<p>
+Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
+</p>
+<pre><code>
+Ignored files:
+    Ignored:    .Rhistory
+    Ignored:    .Rproj.user/
+    Ignored:    PD-GSC/.DS_Store
+    Ignored:    PD-GSC/.Rhistory
+    Ignored:    PD-GSC/.Rproj.user/
+    Ignored:    PD-GSC/output/.DS_Store
+    Ignored:    output/01_SN505-Neurosphere-P2/
+
+Untracked files:
+    Untracked:  PD-GSC/.Rprofile
+    Untracked:  PD-GSC/.gitattributes
+    Untracked:  PD-GSC/.gitignore
+    Untracked:  PD-GSC/AUC_Program_Activity.pdf
+    Untracked:  PD-GSC/AUC_RegulonActivity.pdf
+    Untracked:  PD-GSC/AUC_Regulon_Activity.pdf
+    Untracked:  PD-GSC/README.md
+    Untracked:  PD-GSC/_workflowr.yml
+    Untracked:  PD-GSC/analysis/
+    Untracked:  PD-GSC/code/
+    Untracked:  PD-GSC/data/
+    Untracked:  PD-GSC/docs/
+    Untracked:  PD-GSC/output/17_SN649-Adherent-P5/
+    Untracked:  PD-GSC/output/18_SN655-Neurosphere-P3/
+    Untracked:  PD-GSC/output/19_SN667-Neurosphere-P2/
+    Untracked:  PD-GSC/output/20_SN674-Neurosphere-P2/
+    Untracked:  PD-GSC/output/21_SN677-Neurosphere-P2/
+    Untracked:  PD-GSC/output/22_SN678-Adherent-P3/
+    Untracked:  PD-GSC/output/23_SN683-Neurosphere-P3/
+    Untracked:  PD-GSC/output/26_SN720-Adherent-p2/
+    Untracked:  PD-GSC/output/27_SN735-Neurosphere-P9/
+    Untracked:  PD-GSC/output/28_SN747-Neurosphere-P4/
+    Untracked:  PD-GSC/output/29_SN753-Neurosphere-P3/
+    Untracked:  PD-GSC/output/30_SN756-Neurosphere-P6/
+    Untracked:  PD-GSC/output/31_SN758-Neurosphere-P6/
+    Untracked:  PD-GSC/output/32_SN767-Neurosphere-P5/
+    Untracked:  PD-GSC/output/33_SN787-Neurosphere-P6/
+    Untracked:  PD-GSC/output/34_SN788-Neurosphere-P5/
+    Untracked:  PD-GSC/output/35_SN799-Neurosphere-P3/
+    Untracked:  PD-GSC/output/36_SN804-Neurosphere-P2/
+    Untracked:  PD-GSC/output/37_SN810-Neurosphere-P5/
+    Untracked:  PD-GSC/output/38_SN812-Neurosphere-P6/
+    Untracked:  PD-GSC/output/39_SN820-Neurosphere-P5/
+    Untracked:  PD-GSC/output/README.md
+    Untracked:  _workflowr.yml
+    Untracked:  analysis/risk_prediction_cohort.Rmd
+    Untracked:  data/MINER_MicroLowessRNATMM.08.24.2020-ST/
+    Untracked:  data/MINER_MicroLowessRNATMM.08.24.2020/.DS_Store
+    Untracked:  data/README.md
+    Untracked:  data/program_activity_all.csv
+    Untracked:  data/program_activity_disease_relevant.csv
+    Untracked:  src/.ipynb_checkpoints/GbmTCGAMicrorrayRNA_MINER-Copy1-checkpoint.ipynb
+    Untracked:  src/.ipynb_checkpoints/Program_activity-checkpoint.ipynb
+    Untracked:  src/.ipynb_checkpoints/RiskPrediction_KK-checkpoint.ipynb
+    Untracked:  src/.ipynb_checkpoints/Untitled1-checkpoint.ipynb
+    Untracked:  src/.ipynb_checkpoints/program_activity_disease_relevant-checkpoint.csv
+    Untracked:  src/GbmTCGAMicrorrayRNA_MINER-Copy1.ipynb
+    Untracked:  src/Program_activity.ipynb
+    Untracked:  src/RiskPrediction_KK.ipynb
+    Untracked:  src/Untitled1.ipynb
+    Untracked:  src/__pycache__/miner_py3.cpython-36.pyc
+    Untracked:  src/program_activity_all.csv
+    Untracked:  src/program_activity_disease_relevant.csv
+
+Unstaged changes:
+    Modified:   .DS_Store
+    Deleted:    PD-GSC/.ipynb_checkpoints/regulonActivity-PDGSC-checkpoint.ipynb
+    Deleted:    PD-GSC/PreliminaryDrugTableForTherapyPrioritization.txt
+    Deleted:    PD-GSC/Program_Activity_01_SN505-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_02_SN508-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_03_SN515-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_04_SN517-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_05_SN521-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_06_SN528-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_07_SN529-Neurosphere-P1.csv
+    Deleted:    PD-GSC/Program_Activity_08_SN531-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_10_SN534-Neurosphere-P1.csv
+    Deleted:    PD-GSC/Program_Activity_12_SN553-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_13_SN575-Neurosphere-P4.csv
+    Deleted:    PD-GSC/Program_Activity_14_SN579-Neurosphere-P1.csv
+    Deleted:    PD-GSC/Program_Activity_15_SN598-Neurosphere-P5.csv
+    Deleted:    PD-GSC/Program_Activity_16_SN601-Neurosphere-p5.csv
+    Deleted:    PD-GSC/Program_Activity_17_SN649-Adherent-P5.csv
+    Deleted:    PD-GSC/Program_Activity_18_SN655-Neurosphere-P3.csv
+    Deleted:    PD-GSC/Program_Activity_19_SN667-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_20_SN674-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_21_SN677-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_22_SN678-Adherent-P3.csv
+    Deleted:    PD-GSC/Program_Activity_23_SN683-Neurosphere-P3.csv
+    Deleted:    PD-GSC/Program_Activity_26_SN720-Adherent-p2.csv
+    Deleted:    PD-GSC/Program_Activity_27_SN735-Neurosphere-P9.csv
+    Deleted:    PD-GSC/Program_Activity_28_SN747-Neurosphere-P4.csv
+    Deleted:    PD-GSC/Program_Activity_29_SN753-Neurosphere-P3.csv
+    Deleted:    PD-GSC/Program_Activity_30_SN756-Neurosphere-P6.csv
+    Deleted:    PD-GSC/Program_Activity_31_SN758-Neurosphere-P6.csv
+    Deleted:    PD-GSC/Program_Activity_32_SN767-Neurosphere-P5.csv
+    Deleted:    PD-GSC/Program_Activity_33_SN787-Neurosphere-P6.csv
+    Deleted:    PD-GSC/Program_Activity_34_SN788-Neurosphere-P5.csv
+    Deleted:    PD-GSC/Program_Activity_35_SN799-Neurosphere-P3.csv
+    Deleted:    PD-GSC/Program_Activity_36_SN804-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Program_Activity_37_SN810-Neurosphere-P5.csv
+    Deleted:    PD-GSC/Program_Activity_38_SN812-Neurosphere-P6.csv
+    Deleted:    PD-GSC/Program_Activity_39_SN820-Neurosphere-P5.csv
+    Deleted:    PD-GSC/Regulon_Activity_01_SN505-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_02_SN508-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_03_SN515-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_04_SN517-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_05_SN521-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_06_SN528-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_07_SN529-Neurosphere-P1.csv
+    Deleted:    PD-GSC/Regulon_Activity_08_SN531-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_10_SN534-Neurosphere-P1.csv
+    Deleted:    PD-GSC/Regulon_Activity_12_SN553-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_13_SN575-Neurosphere-P4.csv
+    Deleted:    PD-GSC/Regulon_Activity_14_SN579-Neurosphere-P1.csv
+    Deleted:    PD-GSC/Regulon_Activity_15_SN598-Neurosphere-P5.csv
+    Deleted:    PD-GSC/Regulon_Activity_16_SN601-Neurosphere-p5.csv
+    Deleted:    PD-GSC/Regulon_Activity_17_SN649-Adherent-P5.csv
+    Deleted:    PD-GSC/Regulon_Activity_18_SN655-Neurosphere-P3.csv
+    Deleted:    PD-GSC/Regulon_Activity_19_SN667-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_20_SN674-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_21_SN677-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_22_SN678-Adherent-P3.csv
+    Deleted:    PD-GSC/Regulon_Activity_23_SN683-Neurosphere-P3.csv
+    Deleted:    PD-GSC/Regulon_Activity_26_SN720-Adherent-p2.csv
+    Deleted:    PD-GSC/Regulon_Activity_27_SN735-Neurosphere-P9.csv
+    Deleted:    PD-GSC/Regulon_Activity_28_SN747-Neurosphere-P4.csv
+    Deleted:    PD-GSC/Regulon_Activity_29_SN753-Neurosphere-P3.csv
+    Deleted:    PD-GSC/Regulon_Activity_30_SN756-Neurosphere-P6.csv
+    Deleted:    PD-GSC/Regulon_Activity_31_SN758-Neurosphere-P6.csv
+    Deleted:    PD-GSC/Regulon_Activity_32_SN767-Neurosphere-P5.csv
+    Deleted:    PD-GSC/Regulon_Activity_33_SN787-Neurosphere-P6.csv
+    Deleted:    PD-GSC/Regulon_Activity_34_SN788-Neurosphere-P5.csv
+    Deleted:    PD-GSC/Regulon_Activity_35_SN799-Neurosphere-P3.csv
+    Deleted:    PD-GSC/Regulon_Activity_36_SN804-Neurosphere-P2.csv
+    Deleted:    PD-GSC/Regulon_Activity_37_SN810-Neurosphere-P5.csv
+    Deleted:    PD-GSC/Regulon_Activity_38_SN812-Neurosphere-P6.csv
+    Deleted:    PD-GSC/Regulon_Activity_39_SN820-Neurosphere-P5.csv
+    Deleted:    PD-GSC/__pycache__/miner_py3_kk.cpython-37.pyc
+    Deleted:    PD-GSC/miner_py3_kk.py
+    Modified:   PD-GSC/output/01_SN505-Neurosphere-P2/01_SN505-Neurosphere-P2_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/02_SN508-Neurosphere-P2/02_SN508-Neurosphere-P2_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/03_SN515-Neurosphere-P2/03_SN515-Neurosphere-P2_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/04_SN517-Neurosphere-P2/04_SN517-Neurosphere-P2_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/05_SN521-Neurosphere-P2/05_SN521-Neurosphere-P2_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/06_SN528-Neurosphere-P2/06_SN528-Neurosphere-P2_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/07_SN529-Neurosphere-P1/07_SN529-Neurosphere-P1_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/08_SN531-Neurosphere-P2/08_SN531-Neurosphere-P2_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/10_SN534-Neurosphere-P1/10_SN534-Neurosphere-P1_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/12_SN553-Neurosphere-P2/12_SN553-Neurosphere-P2_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/13_SN575-Neurosphere-P4/13_SN575-Neurosphere-P4_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/14_SN579-Neurosphere-P1/14_SN579-Neurosphere-P1_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/15_SN598-Neurosphere-P5/15_SN598-Neurosphere-P5_drug_therapy_activity_IC50.csv
+    Modified:   PD-GSC/output/16_SN601-Neurosphere-p5/16_SN601-Neurosphere-p5_drug_therapy_activity_IC50.csv
+    Deleted:    PD-GSC/regulonActivity-PDGSC.ipynb
+    Deleted:    PD-GSC/regulonActivitySummary.txt
+    Deleted:    PD-GSC/unique_GBM_drugs.csv
+    Modified:   src/GbmTCGAMicrorrayRNA_MINER-ST.ipynb
+    Modified:   src/GbmTCGAMicrorrayRNA_MINER.ipynb
+    Modified:   src/MINERDiseaseRelevantC-MFiltering.ipynb
+    Modified:   src/MINER_Figure_2-ST.ipynb
+    Modified:   src/MINER_networkMapping.ipynb
+    Modified:   src/MinerRegulatorToRegulonStatisticalTest.ipynb
+    Modified:   src/Miner_run_GBM_KK_microarray_py3.ipynb
+    Modified:   src/Program_Activity_Cohort.ipynb
+    Modified:   src/__pycache__/miner_py3_kk.cpython-36.pyc
+    Modified:   src/miner_generate_network.ipynb
+    Modified:   src/regulonActivity-PDGSC.ipynb
+    Modified:   src/survivalanalysis_riskstratification_miner_gbm.ipynb
+
+</code></pre>
+<p>
+Note that any generated files, e.g. HTML, png, CSS, etc., are not included in this status report because it is ok for generated content to have uncommitted changes.
+</p>
+</div>
+</div>
+</div>
+</div>
+<hr>
+</div>
+<div id="versions" class="tab-pane fade">
+<p>
+There are no past versions. Publish this analysis with <code>wflow_publish()</code> to start tracking its development.
+</p>
+<hr>
+</div>
+</div>
+</div>
+<div id="risk-predicion-from-carl" class="section level1">
+<h1>Risk predicion from Carl</h1>
+<div id="apply-elastic-net-regression" class="section level2">
+<h2>Apply elastic net regression</h2>
+</div>
+<div id="libraries-caret-proc-ggplot2" class="section level2">
+<h2>libraries: caret, pROC, ggplot2</h2>
+</div>
+<div id="data---data.frame-of-network-activity-rows-are-features-columns-are-samples" class="section level2">
+<h2>data - data.frame of network activity, rows are features, columns are samples</h2>
+</div>
+<div id="classer---vector-of-risk-labels-high-low.-must-match-column-order-of-data" class="section level2">
+<h2>classer - vector of risk labels (high, low). must match column order of data</h2>
+</div>
+<div id="ml_method---name-of-caret-ml-method" class="section level2">
+<h2>ml_method - name of caret ml method</h2>
+</div>
+<div id="tuner---number-of-combinations-of-tuning-parameter" class="section level2">
+<h2>tuner - number of combinations of tuning parameter</h2>
+</div>
+<div id="seed---random-seed" class="section level2">
+<h2>seed - random seed</h2>
+</div>
+<div id="prune---if-true-remove-low-info-features" class="section level2">
+<h2>prune - if true remove low info features</h2>
+</div>
+<div id="prune_cut---threshold-for-pruning-minimum-number-of-absolute-active-features-necessary" class="section level2">
+<h2>prune_cut - threshold for pruning (minimum number of absolute active features necessary)</h2>
+</div>
+<div id="boot_iters---number-of-bootstrapping-iterations" class="section level2">
+<h2>boot_iters - number of bootstrapping iterations</h2>
+<div id="load-data-disease-relevant" class="section level3">
+<h3>Load data disease relevant</h3>
+<pre class="r"><code>program_data &lt;- read_csv(&quot;data/program_activity_disease_relevant.csv&quot;) </code></pre>
+<pre><code>Warning: Missing column names filled in: &#39;X1&#39; [1]</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>TCGA_Survival_Gbm &lt;- read_csv(&quot;data/TCGA_Survival_Gbm.csv&quot;) </code></pre>
+<pre><code>Warning: Missing column names filled in: &#39;X15&#39; [15], &#39;X16&#39; [16], &#39;X17&#39; [17],
+&#39;X18&#39; [18], &#39;X19&#39; [19], &#39;X20&#39; [20], &#39;X21&#39; [21], &#39;X22&#39; [22], &#39;X23&#39; [23],
+&#39;X24&#39; [24], &#39;X25&#39; [25], &#39;X26&#39; [26], &#39;X27&#39; [27], &#39;X28&#39; [28], &#39;X29&#39; [29],
+&#39;X30&#39; [30], &#39;X31&#39; [31], &#39;X32&#39; [32], &#39;X33&#39; [33], &#39;X34&#39; [34], &#39;X35&#39; [35],
+&#39;X36&#39; [36], &#39;X37&#39; [37], &#39;X38&#39; [38], &#39;X39&#39; [39], &#39;X40&#39; [40], &#39;X41&#39; [41],
+&#39;X42&#39; [42], &#39;X43&#39; [43], &#39;X44&#39; [44], &#39;X45&#39; [45], &#39;X46&#39; [46], &#39;X47&#39; [47],
+&#39;X48&#39; [48], &#39;X49&#39; [49], &#39;X50&#39; [50], &#39;X51&#39; [51], &#39;X52&#39; [52], &#39;X53&#39; [53],
+&#39;X54&#39; [54], &#39;X55&#39; [55], &#39;X56&#39; [56], &#39;X57&#39; [57], &#39;X58&#39; [58], &#39;X59&#39; [59],
+&#39;X60&#39; [60], &#39;X61&#39; [61], &#39;X62&#39; [62], &#39;X63&#39; [63], &#39;X64&#39; [64], &#39;X65&#39; [65],
+&#39;X66&#39; [66], &#39;X67&#39; [67], &#39;X68&#39; [68], &#39;X69&#39; [69], &#39;X70&#39; [70], &#39;X71&#39; [71],
+&#39;X72&#39; [72], &#39;X73&#39; [73], &#39;X74&#39; [74], &#39;X75&#39; [75], &#39;X76&#39; [76], &#39;X77&#39; [77],
+&#39;X78&#39; [78], &#39;X79&#39; [79], &#39;X80&#39; [80], &#39;X81&#39; [81], &#39;X82&#39; [82], &#39;X83&#39; [83],
+&#39;X84&#39; [84], &#39;X85&#39; [85], &#39;X86&#39; [86], &#39;X87&#39; [87], &#39;X88&#39; [88], &#39;X89&#39; [89],
+&#39;X90&#39; [90], &#39;X91&#39; [91], &#39;X92&#39; [92], &#39;X93&#39; [93], &#39;X94&#39; [94], &#39;X95&#39; [95],
+&#39;X96&#39; [96], &#39;X97&#39; [97], &#39;X98&#39; [98], &#39;X99&#39; [99], &#39;X100&#39; [100], &#39;X101&#39; [101],
+&#39;X102&#39; [102], &#39;X103&#39; [103], &#39;X104&#39; [104], &#39;X105&#39; [105], &#39;X106&#39; [106],
+&#39;X107&#39; [107], &#39;X108&#39; [108], &#39;X109&#39; [109], &#39;X110&#39; [110], &#39;X111&#39; [111],
+&#39;X112&#39; [112], &#39;X113&#39; [113], &#39;X114&#39; [114], &#39;X115&#39; [115], &#39;X116&#39; [116],
+&#39;X117&#39; [117], &#39;X118&#39; [118], &#39;X119&#39; [119], &#39;X120&#39; [120], &#39;X121&#39; [121],
+&#39;X122&#39; [122], &#39;X123&#39; [123], &#39;X124&#39; [124], &#39;X125&#39; [125], &#39;X126&#39; [126],
+&#39;X127&#39; [127], &#39;X128&#39; [128], &#39;X129&#39; [129], &#39;X130&#39; [130], &#39;X131&#39; [131],
+&#39;X132&#39; [132], &#39;X133&#39; [133], &#39;X134&#39; [134], &#39;X135&#39; [135], &#39;X136&#39; [136],
+&#39;X137&#39; [137], &#39;X138&#39; [138], &#39;X139&#39; [139], &#39;X140&#39; [140], &#39;X141&#39; [141],
+&#39;X142&#39; [142], &#39;X143&#39; [143], &#39;X144&#39; [144], &#39;X145&#39; [145], &#39;X146&#39; [146],
+&#39;X147&#39; [147], &#39;X148&#39; [148], &#39;X149&#39; [149], &#39;X150&#39; [150], &#39;X151&#39; [151],
+&#39;X152&#39; [152], &#39;X153&#39; [153], &#39;X154&#39; [154], &#39;X155&#39; [155], &#39;X156&#39; [156],
+&#39;X157&#39; [157], &#39;X158&#39; [158], &#39;X159&#39; [159], &#39;X160&#39; [160], &#39;X161&#39; [161],
+&#39;X162&#39; [162], &#39;X163&#39; [163], &#39;X164&#39; [164], &#39;X165&#39; [165], &#39;X166&#39; [166],
+&#39;X167&#39; [167], &#39;X168&#39; [168], &#39;X169&#39; [169], &#39;X170&#39; [170], &#39;X171&#39; [171],
+&#39;X172&#39; [172]</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_logical(),
+  Patient_ID = col_character(),
+  D_PFS = col_double(),
+  D_PFS_FLAG = col_double(),
+  Subtype = col_character(),
+  MGMT_Status = col_character(),
+  Histological_type = col_character(),
+  kmEstimate = col_double(),
+  GuanScore = col_double(),
+  Classer = col_character(),
+  Classer_binary = col_double(),
+  GuanScoreZScored = col_double(),
+  Risk_predicted = col_character(),
+  RiskClassAutophagy = col_character(),
+  RiskClassAutophagy_binary = col_double(),
+  X172 = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>rownames(program_data) &lt;- program_data$X1</code></pre>
+<pre><code>Warning: Setting row names on a tibble is deprecated.</code></pre>
+<pre class="r"><code>xs &lt;- intersect(TCGA_Survival_Gbm$Patient_ID, colnames(program_data))
+diff &lt;- setdiff(colnames(program_data), TCGA_Survival_Gbm$Patient_ID)
+
+program_data_filt &lt;- program_data %&gt;%
+  select(matches(xs)) %&gt;%
+  select(!matches(diff))
+
+classer &lt;- TCGA_Survival_Gbm %&gt;%
+  filter(Patient_ID %in% xs) %&gt;%
+  pull(Classer)</code></pre>
+</div>
+<div id="elastic-net-function" class="section level3">
+<h3>Elastic net function</h3>
+<pre class="r"><code>applyElasticNet &lt;- function(data, classer, ml_method=&quot;glmnet&quot;, tuner=20, seed=123,
+                                 prune=TRUE, prune_cut=3, boot_iters=10) {
+ 
+  pro &lt;- data.frame(t(as.matrix(data)))
+  colnames(pro) &lt;- as.character(rownames(data))
+  input &lt;- pro
+ 
+  classer &lt;- ifelse(classer==&quot;low&quot;, &quot;low&quot;, &quot;high&quot;)
+ 
+  ## prune low info programs
+  if(prune) {
+     act &lt;- apply(pro, 2, function(x) return(sum(abs(x))))
+     input &lt;- pro[,act &gt;prune_cut]
+  }
+ 
+  print(paste(&quot;Model consists of&quot;, ncol(input), &quot;programs&quot;))
+  input &lt;- cbind(risk=classer, input)
+ 
+  set.seed(seed)
+  model &lt;- caret::train(risk~., data=input, method = ml_method,
+    trControl = trainControl(&quot;boot&quot;, number = boot_iters),
+    tuneLength = tuner)
+ 
+  ## get predictions
+  preds &lt;- predict(model, input[,-1], type=&quot;prob&quot;)
+  out_preds &lt;- data.frame(preds=preds[,1], risk=classer, sample=rownames(input))
+ 
+  ## get predicted groups
+  pred_group &lt;- rep(&quot;low&quot;, nrow(preds))
+  pred_group[preds[,1] &gt; 0.5] &lt;- &quot;high&quot;
+  pred_group[preds[,1] &gt; 0.6] &lt;- &quot;extreme&quot;
+ 
+ 
+  rocc &lt;- roc(response=classer, predictor=preds[,1], plot=TRUE)
+  auc1 &lt;-  signif(auc(rocc)[1], 3)
+  roc_d1 &lt;- data.frame(FPR=rev(1-rocc$specificities), TPR=rev(rocc$sensitivities))
+ 
+  ggplot(roc_d1,aes(FPR,TPR))+geom_line(size = 2, alpha = 0.7) +
+    labs(title= &quot;Validation data ROC&quot;,
+         x = &quot;False Positive Rate&quot;,
+         y = &quot;True Positive Rate&quot;) +
+    annotate(&#39;text&#39;, x=0.05, y=1, label=&quot;AUC&quot;, color=&quot;black&quot;, fontface = &#39;bold&#39;) +
+    annotate(&#39;text&#39;, x=0.05, y=0.95, label=auc1, color=&quot;black&quot;, fontface = &#39;bold&#39;)  +
+    geom_abline(slope=1, intercept=0, linetype=&quot;dashed&quot;)
+ 
+  return(list(model, rocc, out_preds, pred_group))
+}</code></pre>
+<pre class="r"><code>disease_rel_risk &lt;- applyElasticNet(data = program_data_filt, classer = classer)</code></pre>
+<pre><code>[1] &quot;Model consists of 33 programs&quot;</code></pre>
+<pre><code>Setting levels: control = high, case = low</code></pre>
+<pre><code>Setting direction: controls &gt; cases</code></pre>
+<p><img src="figure/risk_prediction_cohort.Rmd/disease_rel_program_risk_prediction-1.png" width="672" style="display: block; margin: auto;" /></p>
+</div>
+<div id="load-data-all" class="section level3">
+<h3>Load data all</h3>
+<pre class="r"><code>program_data &lt;- read_csv(&quot;data/program_activity_all.csv&quot;) </code></pre>
+<pre><code>Warning: Missing column names filled in: &#39;X1&#39; [1]</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_double()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>TCGA_Survival_Gbm &lt;- read_csv(&quot;data/TCGA_Survival_Gbm.csv&quot;) </code></pre>
+<pre><code>Warning: Missing column names filled in: &#39;X15&#39; [15], &#39;X16&#39; [16], &#39;X17&#39; [17],
+&#39;X18&#39; [18], &#39;X19&#39; [19], &#39;X20&#39; [20], &#39;X21&#39; [21], &#39;X22&#39; [22], &#39;X23&#39; [23],
+&#39;X24&#39; [24], &#39;X25&#39; [25], &#39;X26&#39; [26], &#39;X27&#39; [27], &#39;X28&#39; [28], &#39;X29&#39; [29],
+&#39;X30&#39; [30], &#39;X31&#39; [31], &#39;X32&#39; [32], &#39;X33&#39; [33], &#39;X34&#39; [34], &#39;X35&#39; [35],
+&#39;X36&#39; [36], &#39;X37&#39; [37], &#39;X38&#39; [38], &#39;X39&#39; [39], &#39;X40&#39; [40], &#39;X41&#39; [41],
+&#39;X42&#39; [42], &#39;X43&#39; [43], &#39;X44&#39; [44], &#39;X45&#39; [45], &#39;X46&#39; [46], &#39;X47&#39; [47],
+&#39;X48&#39; [48], &#39;X49&#39; [49], &#39;X50&#39; [50], &#39;X51&#39; [51], &#39;X52&#39; [52], &#39;X53&#39; [53],
+&#39;X54&#39; [54], &#39;X55&#39; [55], &#39;X56&#39; [56], &#39;X57&#39; [57], &#39;X58&#39; [58], &#39;X59&#39; [59],
+&#39;X60&#39; [60], &#39;X61&#39; [61], &#39;X62&#39; [62], &#39;X63&#39; [63], &#39;X64&#39; [64], &#39;X65&#39; [65],
+&#39;X66&#39; [66], &#39;X67&#39; [67], &#39;X68&#39; [68], &#39;X69&#39; [69], &#39;X70&#39; [70], &#39;X71&#39; [71],
+&#39;X72&#39; [72], &#39;X73&#39; [73], &#39;X74&#39; [74], &#39;X75&#39; [75], &#39;X76&#39; [76], &#39;X77&#39; [77],
+&#39;X78&#39; [78], &#39;X79&#39; [79], &#39;X80&#39; [80], &#39;X81&#39; [81], &#39;X82&#39; [82], &#39;X83&#39; [83],
+&#39;X84&#39; [84], &#39;X85&#39; [85], &#39;X86&#39; [86], &#39;X87&#39; [87], &#39;X88&#39; [88], &#39;X89&#39; [89],
+&#39;X90&#39; [90], &#39;X91&#39; [91], &#39;X92&#39; [92], &#39;X93&#39; [93], &#39;X94&#39; [94], &#39;X95&#39; [95],
+&#39;X96&#39; [96], &#39;X97&#39; [97], &#39;X98&#39; [98], &#39;X99&#39; [99], &#39;X100&#39; [100], &#39;X101&#39; [101],
+&#39;X102&#39; [102], &#39;X103&#39; [103], &#39;X104&#39; [104], &#39;X105&#39; [105], &#39;X106&#39; [106],
+&#39;X107&#39; [107], &#39;X108&#39; [108], &#39;X109&#39; [109], &#39;X110&#39; [110], &#39;X111&#39; [111],
+&#39;X112&#39; [112], &#39;X113&#39; [113], &#39;X114&#39; [114], &#39;X115&#39; [115], &#39;X116&#39; [116],
+&#39;X117&#39; [117], &#39;X118&#39; [118], &#39;X119&#39; [119], &#39;X120&#39; [120], &#39;X121&#39; [121],
+&#39;X122&#39; [122], &#39;X123&#39; [123], &#39;X124&#39; [124], &#39;X125&#39; [125], &#39;X126&#39; [126],
+&#39;X127&#39; [127], &#39;X128&#39; [128], &#39;X129&#39; [129], &#39;X130&#39; [130], &#39;X131&#39; [131],
+&#39;X132&#39; [132], &#39;X133&#39; [133], &#39;X134&#39; [134], &#39;X135&#39; [135], &#39;X136&#39; [136],
+&#39;X137&#39; [137], &#39;X138&#39; [138], &#39;X139&#39; [139], &#39;X140&#39; [140], &#39;X141&#39; [141],
+&#39;X142&#39; [142], &#39;X143&#39; [143], &#39;X144&#39; [144], &#39;X145&#39; [145], &#39;X146&#39; [146],
+&#39;X147&#39; [147], &#39;X148&#39; [148], &#39;X149&#39; [149], &#39;X150&#39; [150], &#39;X151&#39; [151],
+&#39;X152&#39; [152], &#39;X153&#39; [153], &#39;X154&#39; [154], &#39;X155&#39; [155], &#39;X156&#39; [156],
+&#39;X157&#39; [157], &#39;X158&#39; [158], &#39;X159&#39; [159], &#39;X160&#39; [160], &#39;X161&#39; [161],
+&#39;X162&#39; [162], &#39;X163&#39; [163], &#39;X164&#39; [164], &#39;X165&#39; [165], &#39;X166&#39; [166],
+&#39;X167&#39; [167], &#39;X168&#39; [168], &#39;X169&#39; [169], &#39;X170&#39; [170], &#39;X171&#39; [171],
+&#39;X172&#39; [172]</code></pre>
+<pre><code>
+── Column specification ────────────────────────────────────────────────────────
+cols(
+  .default = col_logical(),
+  Patient_ID = col_character(),
+  D_PFS = col_double(),
+  D_PFS_FLAG = col_double(),
+  Subtype = col_character(),
+  MGMT_Status = col_character(),
+  Histological_type = col_character(),
+  kmEstimate = col_double(),
+  GuanScore = col_double(),
+  Classer = col_character(),
+  Classer_binary = col_double(),
+  GuanScoreZScored = col_double(),
+  Risk_predicted = col_character(),
+  RiskClassAutophagy = col_character(),
+  RiskClassAutophagy_binary = col_double(),
+  X172 = col_character()
+)
+ℹ Use `spec()` for the full column specifications.</code></pre>
+<pre class="r"><code>rownames(program_data) &lt;- program_data$X1</code></pre>
+<pre><code>Warning: Setting row names on a tibble is deprecated.</code></pre>
+<pre class="r"><code>xs &lt;- intersect(TCGA_Survival_Gbm$Patient_ID, colnames(program_data))
+diff &lt;- setdiff(colnames(program_data), TCGA_Survival_Gbm$Patient_ID)
+
+program_data_filt &lt;- program_data %&gt;%
+  select(matches(xs)) %&gt;%
+  select(!matches(diff))
+
+classer &lt;- TCGA_Survival_Gbm %&gt;%
+  filter(Patient_ID %in% xs) %&gt;%
+  pull(Classer)</code></pre>
+<pre class="r"><code>all_prog_risk &lt;- applyElasticNet(data = program_data_filt, classer = classer)</code></pre>
+<pre><code>[1] &quot;Model consists of 178 programs&quot;</code></pre>
+<pre><code>Setting levels: control = high, case = low</code></pre>
+<pre><code>Setting direction: controls &lt; cases</code></pre>
+<p><img src="figure/risk_prediction_cohort.Rmd/all_program_risk_prediction-1.png" width="672" style="display: block; margin: auto;" /></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.0.5 (2021-03-31)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Catalina 10.15.7
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] forcats_0.5.1   stringr_1.4.0   dplyr_1.0.5     purrr_0.3.4    
+ [5] readr_1.4.0     tidyr_1.1.3     tibble_3.1.0    tidyverse_1.3.1
+ [9] pROC_1.18.0     caret_6.0-90    lattice_0.20-41 ggplot2_3.3.5  
+
+loaded via a namespace (and not attached):
+ [1] nlme_3.1-152         fs_1.5.0             lubridate_1.7.10    
+ [4] httr_1.4.2           rprojroot_2.0.2      tools_4.0.5         
+ [7] backports_1.2.1      bslib_0.2.4          utf8_1.2.1          
+[10] R6_2.5.0             rpart_4.1-15         DBI_1.1.1           
+[13] colorspace_2.0-0     nnet_7.3-15          withr_2.4.2         
+[16] tidyselect_1.1.0     compiler_4.0.5       git2r_0.28.0        
+[19] glmnet_4.1-3         cli_3.0.1            rvest_1.0.0         
+[22] xml2_1.3.2           sass_0.3.1           scales_1.1.1        
+[25] proxy_0.4-26         digest_0.6.27        rmarkdown_2.7       
+[28] pkgconfig_2.0.3      htmltools_0.5.1.1    parallelly_1.24.0   
+[31] highr_0.9            dbplyr_2.1.1         rlang_0.4.10        
+[34] readxl_1.3.1         rstudioapi_0.13      shape_1.4.6         
+[37] jquerylib_0.1.3      generics_0.1.0       jsonlite_1.7.2      
+[40] ModelMetrics_1.2.2.2 magrittr_2.0.1       Matrix_1.3-2        
+[43] Rcpp_1.0.6           munsell_0.5.0        fansi_0.4.2         
+[46] lifecycle_1.0.0      stringi_1.5.3        yaml_2.2.1          
+[49] MASS_7.3-53.1        plyr_1.8.6           recipes_0.1.17      
+[52] grid_4.0.5           parallel_4.0.5       listenv_0.8.0       
+[55] promises_1.2.0.1     crayon_1.4.1         haven_2.4.0         
+[58] splines_4.0.5        hms_1.0.0            knitr_1.32          
+[61] pillar_1.6.0         future.apply_1.7.0   reshape2_1.4.4      
+[64] codetools_0.2-18     stats4_4.0.5         reprex_2.0.0        
+[67] glue_1.4.2           evaluate_0.14        data.table_1.14.0   
+[70] modelr_0.1.8         vctrs_0.3.7          httpuv_1.5.5        
+[73] foreach_1.5.1        cellranger_1.1.0     gtable_0.3.0        
+[76] future_1.21.0        assertthat_0.2.1     xfun_0.22           
+[79] gower_0.2.2          prodlim_2019.11.13   broom_0.7.6         
+[82] e1071_1.7-9          later_1.1.0.1        class_7.3-18        
+[85] survival_3.2-10      timeDate_3043.102    iterators_1.0.13    
+[88] workflowr_1.6.2      lava_1.6.10          globals_0.14.0      
+[91] ellipsis_0.3.1       ipred_0.9-12        </code></pre>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
