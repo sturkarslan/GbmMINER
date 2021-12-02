@@ -5785,7 +5785,8 @@ def generateRegulonActivity(regulonModules, expressionData, p=0.05, returnBkgd="
 def generateProgramActivity(transcriptional_programs, regulonModules, expressionData, p=0.05, returnBkgd="no"):
     
     ##print(type(transcriptional_programs))
-    program_list = [transcriptional_programs[str(key)] for key in range(len(transcriptional_programs.keys()))]
+    #program_list = [transcriptional_programs[str(key)] for key in range(len(transcriptional_programs.keys()))]
+    program_list = transcriptional_programs
 
     # Create dictionary of program genes
     # make dictionary of program keys with gene lists as elements
