@@ -1,16 +1,17 @@
 library(tidyverse)
 library(here)
 library(DT)
-library(data.table)
 library(gridExtra)
 library(jsonlite)
 library(plyr)
+library(purrr)
 library(clusterProfiler)
 library(msigdbr)
 library(enrichplot)
 library(ReactomePA)
 library(AnnotationDbi)
 library(org.Hs.eg.db)
+library(data.table)
 source("code/utilities_drug.R")
 source("code/drug_network_details.R")
 source("code/regulon_enrichment.R")
@@ -110,12 +111,12 @@ map_drugs <- function(type="regulon", disease=TRUE, network_dir=network_dir_inpu
     # Get mutated gene names
     patient_mutations <- patient_mutation_files %>%
       map(read_delim, delim="\t") %>%
-      reduce(rbind) %>%
+      purrr::reduce(rbind) %>%
       #mutate(AF = round(AF*100, digits = 2)) %>%
       separate(col=hgncGene,sep = ",", into=c("GENE"), remove = F) %>%
       filter(Consequence %in% c("missense","frameshift","stop_gained")) %>%
       pull(GENE) %>%
-      unique()
+      base::unique()
 
       drug_reg_mut <- drug_reg %>%
       mutate(MutatedInPatient = if_else(MutationSymbol %in% patient_mutations, paste("TRUE"), paste("FALSE"))) %>%
