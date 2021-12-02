@@ -9,54 +9,54 @@ drug_network_details <- function(data_mat){
     ## SOC drugs
     drug.1 <- data_mat %>%
       filter(Drug == drug) %>%
-      select(-MutationSymbol,-IfCancerDriverMutation,-RegulatorSymbol,RegulatorType,-MutationRegulatorEdge,-MutationRegulonEdge,-SpearmanCorrelationTFAndEigenGene,-`IfCRISPR-Cas9SignificantTF`,-IfDETFForTCGAGBM,-RNAiTFGeneEssentialityAchilles,-MutatedInPatient,-TargetMutatedInPatient,-Miner_Target_Type) %>%
-      unique()
+      dplyr::select(-MutationSymbol,-IfCancerDriverMutation,-RegulatorSymbol,RegulatorType,-MutationRegulatorEdge,-MutationRegulonEdge,-SpearmanCorrelationTFAndEigenGene,-`IfCRISPR-Cas9SignificantTF`,-IfDETFForTCGAGBM,-RNAiTFGeneEssentialityAchilles,-MutatedInPatient,-TargetMutatedInPatient,-Miner_Target_Type) %>%
+      base::unique()
     #print(drug.1)
 
     target.count <-  drug.1 %>%
-      select(DrugTargetAll) %>%
+      dplyr::select(DrugTargetAll) %>%
       separate_rows(DrugTargetAll,sep=",") %>%
-      unique() %>%
+      base::unique() %>%
       dplyr::count()
 
     regulon.count <- drug.1 %>%
-      select(DrugRegulonAll) %>%
+      dplyr::select(DrugRegulonAll) %>%
       separate_rows(DrugRegulonAll,sep=",") %>%
-      unique() %>%
+      base::unique() %>%
       dplyr::count()
 
     overactive.regulon.count <- drug.1 %>%
-      select(DrugRegulonOverActive) %>%
+      dplyr::select(DrugRegulonOverActive) %>%
       filter(DrugRegulonOverActive != "NA") %>%
       separate_rows(DrugRegulonOverActive,sep=",") %>%
-      unique() %>%
+      base::unique() %>%
       dplyr::count()
 
     underactive.regulon.count <- drug.1 %>%
-      select(DrugRegulonUnderActive) %>%
+      dplyr::select(DrugRegulonUnderActive) %>%
       filter(DrugRegulonUnderActive != "NA") %>%
       separate_rows(DrugRegulonUnderActive,sep=",") %>%
-      unique() %>%
+      base::unique() %>%
       dplyr::count()
 
     program.count <- drug.1 %>%
-      select(DrugProgramAll) %>%
+      dplyr::select(DrugProgramAll) %>%
       separate_rows(DrugProgramAll,sep=",") %>%
-      unique() %>%
+      base::unique() %>%
       dplyr::count()
 
     overactive.program.count <- drug.1 %>%
-      select(DrugProgramOverActive) %>%
+      dplyr::select(DrugProgramOverActive) %>%
       filter(DrugProgramOverActive != "NA") %>%
       separate_rows(DrugProgramOverActive,sep=",") %>%
-      unique() %>%
+      base::unique() %>%
       dplyr::count()
 
     underactive.program.count <- drug.1 %>%
-      select(DrugProgramUnderActive) %>%
+      dplyr::select(DrugProgramUnderActive) %>%
       filter(DrugProgramUnderActive != "NA") %>%
       separate_rows(DrugProgramUnderActive,sep=",") %>%
-      unique() %>%
+      base::unique() %>%
       dplyr::count()
 
     # if(drug %in% previous_treatments()){
@@ -85,13 +85,13 @@ drug_network_details <- function(data_mat){
 
     #print(drug.target)
     GBM.trials <- drug.1 %>%
-      select(DrugTrialPhaseGBM) %>%
+      dplyr::select(DrugTrialPhaseGBM) %>%
       mutate(DrugTrialPhaseGBM =  dplyr::if_else(DrugTrialPhaseGBM == "#N/A", "None", paste0(DrugTrialPhaseGBM)))
 
 
     antiCancer.phaseIV <- drug.1 %>%
-      select(Cancer_PhaseIV) %>%
-      unique() %>%
+      dplyr::select(Cancer_PhaseIV) %>%
+      base::unique() %>%
       mutate(`Cancer_PhaseIV` = dplyr::if_else(Cancer_PhaseIV == "AntiCancerPhaseIV", paste("TRUE"), paste("FALSE") )) %>%
       pull()#paste(collapse=",", sep="")
 
