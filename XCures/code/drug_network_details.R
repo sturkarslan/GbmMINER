@@ -9,7 +9,7 @@ drug_network_details <- function(data_mat){
     ## SOC drugs
     drug.1 <- data_mat %>%
       filter(Drug == drug) %>%
-      dplyr::select(-MutationSymbol,-IfCancerDriverMutation,-RegulatorSymbol,RegulatorType,-MutationRegulatorEdge,-MutationRegulonEdge,-SpearmanCorrelationTFAndEigenGene,-`IfCRISPR-Cas9SignificantTF`,-IfDETFForTCGAGBM,-RNAiTFGeneEssentialityAchilles,-MutatedInPatient,-TargetMutatedInPatient,-Miner_Target_Type) %>%
+      dplyr::select(-IfCancerDriverMutation,RegulatorType,-MutationRegulatorEdge,-MutationRegulonEdge,-SpearmanCorrelationTFAndEigenGene,-`IfCRISPR-Cas9SignificantTF`,-IfDETFForTCGAGBM,-RNAiTFGeneEssentialityAchilles,-Miner_Target_Type) %>%
       base::unique()
     #print(drug.1)
 
@@ -59,6 +59,25 @@ drug_network_details <- function(data_mat){
       base::unique() %>%
       dplyr::count()
 
+    mutations <- drug.1 %>%
+      dplyr::select(MutationSymbol) %>%
+      mutate(Mutations = paste0(unique(MutationSymbol), collapse=":")) %>%
+      dplyr::pull() %>%
+      base::unique()
+
+    regulators <- drug.1 %>%
+      dplyr::select(RegulatorSymbol) %>%
+      mutate(Regulators = paste0(unique(RegulatorSymbol), collapse=":")) %>%
+      dplyr::pull() %>%
+      base::unique()
+
+    regulator.type <- drug.1 %>%
+      dplyr::select(RegulatorType) %>%
+      mutate(RegulatorType = paste0(unique(RegulatorType), collapse=":")) %>%
+      dplyr::pull() %>%
+      base::unique()
+
+
     # if(drug %in% previous_treatments()){
     #   past.treatment <- paste(tags$span(style = "color: blue;","YES"))#paste(icon("check-circle", class="text-success"))
     # } else {
@@ -95,20 +114,29 @@ drug_network_details <- function(data_mat){
       mutate(`Cancer_PhaseIV` = dplyr::if_else(Cancer_PhaseIV == "AntiCancerPhaseIV", paste("TRUE"), paste("FALSE") )) %>%
       pull()#paste(collapse=",", sep="")
 
+
     t1 <- rbind(t1, cbind(
       Drug = drug,
-      #`Target Gene(s)` = paste0(drug.target, collapse=", "),
-      #`Drug Class` = drug.class,
-      `Program Activity Summary` =program.summary,
+      `Drug Mechanism` = unique(drug.1$DrugMechOfAction),
+      `Target Gene(s)` = unique(drug.1$DrugTargetAll),
+      `Drug Constrained Regulon Activity` = unique(drug.1$DrugConstrainedRegulonActivity),
+      `Drug Constrained Program Activity` = unique(drug.1$DrugConstrainedProgramActivity),
+      `All Regulon(s)` = unique(drug.1$DrugRegulonAll),
+      `Overactive Regulon(s)` = unique(drug.1$DrugRegulonOverActive),
+      `Underactive Regulon(s)` = unique(drug.1$DrugRegulonUnderActive),
+      `All Program(s)` = unique(drug.1$DrugProgramAll),
+      `Overactive Program(s)` = unique(drug.1$DrugProgramOverActive),
+      `Underactive Program(s)` = unique(drug.1$DrugProgramUnderActive),
       `Regulon Activity Summary` = regulon.summary,
-      #`Mean RMST Program` = round(drug.1$DrugMeanRMSTProgram,digits = 2),
-      #`Mean RMST Regulon` = round(drug.1$DrugMeanRMSTRegulon,digits = 2),
-      #`Mean RMST Regulon p-value` = signif(drug.1$DrugRMSTRegulonMeanPvalue,digits = 2),
-      #`Network Constrained Regulon Activity` = round(drug.1$DrugConstrainedRegulonActivity,digits = 2),
+      `Program Activity Summary` = program.summary,
+      `Mean RMST Regulon` = round(drug.1$DrugMeanRMSTRegulon,digits = 2),
+      Mutations = mutations,
+      Regulators = regulators,
+      `Regulator Type` = regulator.type,
       `Max GBM Trial Phase` = GBM.trials,
-      `Other FDA Appr.` = antiCancer.phaseIV
-      #SOC = drug.1$soc,
-      #`Add Comments` = "Comments"
+      `Other FDA Appr.` = antiCancer.phaseIV,
+      `TargetMutatedInPatient` = paste0(unique(drug.1$TargetMutatedInPatient), collapse = ":"),
+      `MutatedInPatient` = paste0(unique(drug.1$MutatedInPatient),collapse = ":")
       )
       )
 
