@@ -13,18 +13,32 @@ library(AnnotationDbi)
 library(org.Hs.eg.db)
 library(data.table)
 source("code/utilities_drug.R")
-source("code/drug_network_details.R")
+source("code/patient_get_network_details.R")
 source("code/regulon_enrichment.R")
+source("code/patient_map_drugs.R")
+source("code/patient_drug_pathway_enrichment.R")
+source("code/patient_rankorder_drug_table.R")
 ###############################################################
+# define input directories
+network_dir_input = "/Volumes/omics4tb2/SYGNAL/GBM-Serdar/XCures/network_activities/P76156"
+
+# define mutations directory
+dna_dir = "/Volumes/omics4tb2/SYGNAL/XCures/P76156"
+
+# get program info
 programs <- read_json("../data/MINER_MicroLowessRNATMM.08.24.2020/transcriptional_programs.json", simplifyVector = T)
+
 ## Read regulon gene list
 regulons <- read_json("../data/MINER_MicroLowessRNATMM.08.24.2020/regulons.json",simplifyVector = T)
 
+# reformat regulons
 programs_df <- ldply(programs, data.frame) %>%
   dplyr::rename("Program" = 1, "Regulon" = 2)
 
+# get drug information
 drug_info <- read_csv("../data/PreliminaryDrugTableForTherapyPrioritizationGBMMINER.csv")
 
+# modify drug information
 drug_info_pr <- tibble()
 for(i in 1: length(drug_info$MutationSymbol)){
   my_row = drug_info[i,]
@@ -35,190 +49,68 @@ for(i in 1: length(drug_info$MutationSymbol)){
     pull(Program)
 
   drug_info_pr <- bind_rows(drug_info_pr, bind_cols(my_row, Program = as.integer(program)))
-
 }
-
-
-network_dir_input = "/Volumes/omics4tb2/SYGNAL/GBM-Serdar/XCures/network_activities/P76156"
-dna_dir = "/Volumes/omics4tb2/SYGNAL/XCures/P76156"
 
 # Get list of all mutation files from XCures folder
 mutation_files <- dir(dna_dir, pattern = "*_somatic.tsv",full.names = T,recursive = T)
 
-## Mapping function
-map_drugs <- function(type="regulon", disease=TRUE, network_dir=network_dir_input){
-  all.samples.activities <- data.frame()
 
-  # Regulon activities
-  if(type == "regulon"){
-    if(disease == TRUE){
-      samples <- dir(network_dir, pattern = "*_disease_rel_regulon_activity.csv",full.names = T)
-    } else{
-      samples <- dir(network_dir, pattern = "*_all_regulon_activity.csv",full.names = T)
-    }
-  }
-   # Program activities
-  if(type == "program"){
-    if(disease == TRUE){
-      samples <- dir(network_dir, pattern = "*_disease_rel_program_activity.csv",full.names = T)
-    } else{
-      samples <- dir(network_dir, pattern = "*_all_program_activity.csv",full.names = T)
-    }
-  }
-
-  ### Loop through each sample
-  for(sample in samples){
-    cat("processing ", sample, "\n")
-    # Get sample name
-    #sample.name1 <- strsplit(sample, split = "_disease_rel_regulon_activity.csv")[[1]][1]
-    if(disease == FALSE){
-      sample.name2 <- strsplit(sample, split="/")[[1]][9]
-      sample.name <- strsplit(sample.name2, split="_all")[[1]][1]
-    } else {
-      sample.name2 <- strsplit(sample, split="/")[[1]][9]
-      sample.name <- strsplit(sample.name2, split="_disease")[[1]][1]
-    }
-
-
-    # create directory to collect results for each sample
-    dir_path <- paste0("output/", sample.name)
-    if(!dir.exists(dir_path)) {
-      dir.create(dir_path)
-    }
-
-    # Regulon and program activity files
-    reg_out <- read_csv(sample) %>%
-      dplyr::rename("Regulon" = 1, "activity" = 2)
-
-    if(disease == TRUE){
-      prog_out <- read_csv(paste0(network_dir, "/",sample.name, "_disease_rel_program_activity.csv")) %>%
-        dplyr::rename("Program" = 1, "activity" = 2)
-    } else {
-      prog_out <- read_csv(paste0(network_dir, "/",sample.name, "_all_program_activity.csv")) %>%
-        dplyr::rename("Program" = 1, "activity" = 2)
-    }
-
-
-    ## generate drug regulon/program activity
-    drug_reg <- getDrugTherapyActivity(drug_info_pr, regulon=reg_out, program=prog_out)
-    drug_reg$patient = sample.name
-
-
-    ## Mutations
-    # Get patients mutation data
-    patient_mutation_files <- grep(sample.name, mutation_files, value = T)
-
-    # Get mutated gene names
-    patient_mutations <- patient_mutation_files %>%
-      map(read_delim, delim="\t") %>%
-      purrr::reduce(rbind) %>%
-      #mutate(AF = round(AF*100, digits = 2)) %>%
-      separate(col=hgncGene,sep = ",", into=c("GENE"), remove = F) %>%
-      filter(Consequence %in% c("missense","frameshift","stop_gained")) %>%
-      pull(GENE) %>%
-      base::unique()
-
-      drug_reg_mut <- drug_reg %>%
-      mutate(MutatedInPatient = if_else(MutationSymbol %in% patient_mutations, paste("TRUE"), paste("FALSE"))) %>%
-      #mutate(TargetMutatedInPatient = str_match(DrugTargetAll, z)) %>%
-      #group_by(Drug,TargetMutatedInPatient) %>%
-      #summarise(tt = paste0(TargetMutatedInPatient, collapse=","))
-      mutate(TargetMutatedInPatient = if_else(strsplit(DrugTargetAll,split = ",",fixed = T) %in% patient_mutations,paste("TRUE"), paste("FALSE")))
-
-     # get network details
-      zz <- drug_network_details(drug_reg_mut)
-
-      # Join network details with main drug table
-      drug_reg_final <- left_join(drug_reg_mut, zz, by="Drug")
-
-    write_csv(drug_reg_final, paste0("output/", sample.name,"/",sample.name,"_",type,"_drug_therapy_activity.csv"))
-    all.samples.activities <- bind_rows(all.samples.activities, drug_reg)
-
-  }
-
-  return(all.samples.activities)
-
-} # function
-
-
+################### Mapping ##################################
+# drug mapping for regulons
 drugs_all_regulon <- map_drugs(type = "regulon", disease = FALSE)
+
+# drug mapping for programs
 drugs_all_program <- map_drugs(type = "program", disease = FALSE)
 
 
-drugs_all_regulon_pathways <- data.frame()
-
+################### Patient Filtering ##################################
 # patient_3
 drugs_all_regulon_3 <- drugs_all_regulon %>%
   filter(patient == "P76156_3")
 
-for(i in drugs_all_regulon_3$Drug){
-  # select the drug row
-  my.row = drugs_all_regulon_3 %>%
-    filter(Drug == i)
+drugs_all_program_3 <- drugs_all_program %>%
+  filter(patient == "P76156_3")
 
-  # get all the regulons
-  my.regulons1 = drugs_all_regulon_3 %>%
-    filter(Drug == i) %>%
-    pull(DrugRegulonOverActive) %>%
-    unique()
-  # split regulons if multiple
-  my.regulons2 <- strsplit(my.regulons1, split = ",")
+# patient_6
+drugs_all_regulon_6 <- drugs_all_regulon %>%
+  filter(patient == "P76156_6")
 
-  ## For each regulon get the regulon genes
-  enrichment.list <- list()
-  all.genes <- c()
-  ii = 0
-  total = length(my.regulons2[[1]])
-  for(regulon in my.regulons2[[1]]){
-    ii = ii + 1
-    cat("\nProcessing regulon: ",regulon, " ", i, "/",total,"\n")
-    regulon.genes <- regulons[[regulon]]
-    cat("Total ", length(regulon.genes), "genes in regulon", regulon)
-
-    # combine all regulon genes
-    all.genes <- append(all.genes, regulon.genes)
-    #
-
-  }
-  # remve duplicate genes
-  all.genes = unique(all.genes)
-
-  ## Convert gene symbols
-  gene.entrez <-   AnnotationDbi::select(org.Hs.eg.db, keys= all.genes, column="ENTREZID", keytype="ENSEMBL", multiVals="first")$ENTREZID
-  gene.symbols <-   AnnotationDbi::select(org.Hs.eg.db, keys= all.genes, column="SYMBOL", keytype="ENSEMBL", multiVals="first")$SYMBOL
-
-  enrichment.list <- try(regulon_enrichment(my.genes = gene.symbols))
-  #reactome.enrich <- enrichPathway(gene = gene.entrez, pvalueCutoff = 0.05, pAdjustMethod = "BH")
-
-  drugs_all_regulon_pathways <- rbind(drugs_all_regulon_pathways,
-                                      cbind(my.row,
-                                            Reactome = paste0(enrichment.list$table8$Description, collapse=":"),
-                                            GO = paste0(enrichment.list$table6$Description, collapse=":"),
-                                            Hallmarks =  paste0(enrichment.list$table1$Description, collapse=":")
-                                              ))
-
-}
+drugs_all_program_6 <- drugs_all_program %>%
+  filter(patient == "P76156_6")
 
 
 
+################### Get Network Details ##################################
+# get summarized network details
+#source("code/drug_network_details.R")
+drugs_all_regulon_3_details <- drug_network_details(data_mat = drugs_all_regulon_3)
+drugs_all_regulon_6_details <- drug_network_details(data_mat = drugs_all_regulon_6)
 
+drugs_all_program_3_details <- drug_network_details(data_mat = drugs_all_program_3)
+drugs_all_program_6_details <- drug_network_details(data_mat = drugs_all_program_6)
 
+################### Get Functional Enrichment ##################################
+# get pathway information
+drugs_all_regulon_3_pathways <- drug_pathway_enrichment(input.df = drugs_all_regulon_3_details)
+drugs_all_regulon_6_pathways <- drug_pathway_enrichment(input.df = drugs_all_regulon_6_details)
 
+drugs_all_program_3_pathways <- drug_pathway_enrichment(input.df = drugs_all_program_3_details)
+drugs_all_program_6_pathways <- drug_pathway_enrichment(input.df = drugs_all_program_6_details)
 
+################### Rank ordering and Final Files  ##################################
+drugs_all_regulon_3_final <- rank_order_drug_table(drugs_all_regulon_3_pathways)
+drugs_all_regulon_6_final <- rank_order_drug_table(drugs_all_regulon_6_pathways)
 
+drugs_all_program_3_final <- rank_order_drug_table(drugs_all_program_3_pathways)
+drugs_all_program_6_final <- rank_order_drug_table(drugs_all_program_6_pathways)
 
+sample.name = "P76156_3"
+type = "regulon"
+write_csv(drugs_all_regulon_3_final, paste0("output/", sample.name,"/",sample.name,"_",type,"_drug_therapy_activity.csv"))
 
-drugs_all_regulon %>%
-
-  select()
- AnnotationDbi::select(org.Hs.eg.db, keys= genes.input, column="ENTREZID", keytype="SYMBOL", multiVals="first") %>%
-
-my.entrez <- my.entrez$ENTREZID
-#my.entrez <- as.character(sort(as.numeric(my.entrez), decreasing = T))
-reactome.enrich <- enrichPathway(gene = my.entrez, pvalueCutoff = 0.05, pAdjustMethod = "BH")
-
-
-
+sample.name = "P76156_6"
+type = "regulon"
+write_csv(drugs_all_regulon_6_final, paste0("output/", sample.name,"/",sample.name,"_",type,"_drug_therapy_activity.csv"))
 
 
 

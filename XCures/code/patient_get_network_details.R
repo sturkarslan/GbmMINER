@@ -9,7 +9,7 @@ drug_network_details <- function(data_mat){
     ## SOC drugs
     drug.1 <- data_mat %>%
       filter(Drug == drug) %>%
-      dplyr::select(-IfCancerDriverMutation,RegulatorType,-MutationRegulatorEdge,-MutationRegulonEdge,-SpearmanCorrelationTFAndEigenGene,-`IfCRISPR-Cas9SignificantTF`,-IfDETFForTCGAGBM,-RNAiTFGeneEssentialityAchilles,-Miner_Target_Type) %>%
+      dplyr::select(-IfCancerDriverMutation,RegulatorType,-MutationRegulatorEdge,-MutationRegulonEdge,-SpearmanCorrelationTFAndEigenGene,-`IfCRISPR-Cas9SignificantTF`,-IfDETFForTCGAGBM,-RNAiTFGeneEssentialityAchilles) %>%
       base::unique()
     #print(drug.1)
 
@@ -77,6 +77,19 @@ drug_network_details <- function(data_mat){
       dplyr::pull() %>%
       base::unique()
 
+    mutated.detail <- drug.1 %>%
+      dplyr::select(MutationSymbol,MutatedInPatient) %>%
+      mutate(MutatedInPatientGene = if_else(MutatedInPatient == TRUE, MutationSymbol, "")) %>%
+      #filter(MutatedInPatientGene != "NA") %>%
+      #drop_na() %>%
+      #        paste(MutationSymbol,MutatedInPatient, sep=":")) %>%
+      # base::unique() %>%
+      # mutate(MutatedDetail2= paste0(unique(MutatedDetail), collapse=",")) %>%
+      dplyr::pull() %>%
+      base::unique()
+
+    print(unique(mutated.detail))
+    print(unique(drug.1$Miner_Target_Type))
 
     # if(drug %in% previous_treatments()){
     #   past.treatment <- paste(tags$span(style = "color: blue;","YES"))#paste(icon("check-circle", class="text-success"))
@@ -136,7 +149,9 @@ drug_network_details <- function(data_mat){
       `Max GBM Trial Phase` = GBM.trials,
       `Other FDA Appr.` = antiCancer.phaseIV,
       `TargetMutatedInPatient` = paste0(unique(drug.1$TargetMutatedInPatient), collapse = ":"),
-      `MutatedInPatient` = paste0(unique(drug.1$MutatedInPatient),collapse = ":")
+      `MutatedInPatient` = paste0(unique(drug.1$MutatedInPatient),collapse = ":"),
+      TargetType = paste0(unique(drug.1$Miner_Target_Type), collapse=":"),
+      MutatedDetail = paste0(unique(mutated.detail), collapse="")
       )
       )
 
