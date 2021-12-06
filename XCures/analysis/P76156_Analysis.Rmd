@@ -18,7 +18,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r libraries, echo=FALSE, message=FALSE,warning=FALSE}
 library(tidyverse)
 library(DT)
-library(icons)
+source("code/patient_plots.R")
+#library(icons)
 ```
 
 ```{r load data, echo=FALSE, message=FALSE,warning=FALSE}
@@ -29,6 +30,7 @@ filename <- paste("output/",patient_id, "/", patient_id, "_regulon_drug_therapy_
             read.csv(
                 filename,
             )
+        network_info <- network_info[1:20,]
 
 ```
 
@@ -50,48 +52,66 @@ filename <- paste("output/",patient_id, "/", patient_id, "_regulon_drug_therapy_
 ### Drug Report Summary based on Patient's active risk-associated transcriptional programs.
 ```{r drug summary, results='asis', echo=F, warning=F, message=F}
 
-for(drug in unique(network_info$Drug)){
-  cat(sep="","1. Drug: **", drug, "**  \n")
+for(target in unique(network_info$Target.Gene.s.)){
+  target.drugs <- network_info %>%
+    filter(Target.Gene.s. == target) %>%
+    pull(Drug)
+  
+  cat(sep="","1. Target: **", target, "**  \n")
+  cat(sep="","Drug(s): **", paste0(target.drugs, collapse=","), "**  \n")
   
     activity.counts <- network_info %>%
-    filter(Drug == drug) %>%
+    filter(Target.Gene.s. == target) %>%
     separate(Regulon.Activity.Summary, sep=" ", into=c("i1","Over","i3","Under","i5","All"), remove = F) %>%
-    select("Over","Under","All")
+    select("Over","Under","All") %>%
+      unique()
   
   target.list <- network_info %>%
-    filter(Drug == drug) %>%
+    filter(Target.Gene.s. == target) %>%
     pull(Target.Gene.s.) %>%
     unique()
   
   rmsts <- network_info %>%
-    filter(Drug == drug) %>%
+    filter(Target.Gene.s. == target) %>%
     pull(Mean.RMST.Regulon)
   
   gbmtrials <- network_info %>%
-    filter(Drug == drug) %>%
-    pull(DrugTrialPhaseGBM) %>%
-    unique()
+    filter(Target.Gene.s. == target) %>%
+    pull(DrugTrialPhaseGBM)
   
    anticancerPhaseIVs <- network_info %>%
-    filter(Drug == drug) %>%
+    filter(Target.Gene.s. == target) %>%
     select(Other.FDA.Appr.) %>%
     unique() %>%
     mutate(Other.FDA.Appr. = if_else(Other.FDA.Appr. == TRUE, paste("**Phase IV** trial for some other cancer(s)"), paste(" **NOT** in Phase IV trials for any cancer."))) %>%
      pull()
    
-   evidence.list <- drugs %>%
-    filter(Drug == drug) %>%
-    select(Evidence) %>%
+   # evidence.list <- network_info %>%
+   #  filter(Drug == drug) %>%
+   #  select(Evidence) %>%
+   #  unique() %>%
+   #  mutate(`Evidence` = if_else(Evidence == 0, "", Evidence)) %>%
+   #  pull()
+   # evidence.sep <- paste(str_split(evidence.list, pattern = ",")[[1]], collapse=", ")
+   
+   hallmarks.list <- network_info %>%
+    filter(Target.Gene.s. == target) %>%
+    select(Hallmarks) %>%
     unique() %>%
-    mutate(`Evidence` = if_else(Evidence == 0, "", Evidence)) %>%
     pull()
-   evidence.sep <- paste(str_split(evidence.list, pattern = ",")[[1]], collapse=", ")
+   hallmarks.sep <- paste(str_split(hallmarks.list, pattern = ":")[[1]], collapse=", ")
 
-   cat(sep = "","Evidence: **", length(target.list),  "** risk-associated regulons containing the target(s), ", paste("**",paste(target.list, collapse=","),"**", sep=""), " of the drug **", drug, "** are overactive in this patient with max RMST value of **", max(rmsts), "**.\n")
-   cat(sep="", drug, " has **", gbmtrials, "** clinical trials for GBM and ", "is in ", anticancerPhaseIVs, "  \n" )
-   if(evidence.sep != ""){
-     cat(sep="", "+ Additional Evidence(s): ", evidence.sep, "  \n")
+   cat(sep = "","Evidence: **", activity.counts$Over,  "** risk-associated regulons containing the target(s), ", paste("**",paste(target.list, collapse=","),"**", sep=""), " of the drug(s) **",  paste0(target.drugs, collapse=","), "** are overactive in this patient with max RMST value of **", max(rmsts), "**.\n")
+   cat(sep="", paste0(target.drugs, collapse=","), " has (**", paste0(gbmtrials,collapse= ","), "**) clinical trials for GBM and ", "is in ", anticancerPhaseIVs, "  \n" )
+   if(hallmarks.sep != ""){
+     cat(sep="", "+ Hallmark(s): ", hallmarks.sep, "  \n")
    }
+   
+   
+   
+     ppp <- plot_activity_histogram(target.drugs[1])
+     print(ppp)
+ 
    
   cat("\n\n")
   cat("\n")
@@ -100,84 +120,85 @@ for(drug in unique(network_info$Drug)){
 ```
 
 
-### Drug Report Summary based on Patient's Mutations
-```{r mutation drug summary, results='asis', echo=F, warning=F, message=F}
+<!-- ### Drug Report Summary based on Patient's Mutations -->
+<!-- ```{r mutation drug summary, results='asis', echo=F, warning=F, message=F} -->
 
-drugs <- network_info %>%
-  filter(TL1961DB85RegulonActivity == 1 & Miner_Target_Type == 'MutationGene') %>%
-  select(Drug, MutationSymbol, TargetSymbol, RegulatorID, Regulon_ID,RegulatorSymbol, RMST_diff_UnderActiveMinusOverActiveMGMTMeth, DrugTrialPhaseGBM,IfAntiCancerPhaseIV, MutationRegulatorEdge) %>%
-  unique()
-  
-for(mutation in unique(drugs$MutationSymbol)){
-  cat(sep="","1. Mutation: **", mutation, "**  \n")
-  
-  target.drugs <- drugs %>%
-    filter(MutationSymbol == mutation) %>%
-    pull(Drug) %>%
-    unique()
-   
-  target.regulators <- drugs %>%
-    filter(MutationSymbol == mutation) %>%
-    pull(RegulatorSymbol) %>%
-    unique()
-   
-  
-  target.regulons <- drugs %>%
-    filter(MutationSymbol == mutation) %>%
-    pull(Regulon_ID) %>%
-    unique()
-  
-  target.list <- drugs %>%
-    filter(MutationSymbol == mutation) %>%
-    pull(TargetSymbol) %>%
-    unique()
-  
-  rmsts <- drugs %>%
-    filter(MutationSymbol == mutation) %>%
-    pull(RMST_diff_UnderActiveMinusOverActiveMGMTMeth)
-  
-  gbmtrials <- drugs %>%
-    filter(MutationSymbol == mutation) %>%
-    pull(DrugTrialPhaseGBM) %>%
-    unique()
-  
-  mutation2regulators <- drugs %>%
-    filter(MutationSymbol == mutation) %>%
-    select(MutationRegulatorEdge) %>%
-    unique() %>%
-    mutate(`MutationRegulatorEdge` = if_else(MutationRegulatorEdge == "1", "activates", "suppresses")) %>%
-    pull()
-  
-   anticancerPhaseIVs <- drugs %>%
-    filter(MutationSymbol == mutation) %>%
-    select(IfAntiCancerPhaseIV) %>%
-    unique() %>%
-    mutate(`IfAntiCancerPhaseIV` = if_else(IfAntiCancerPhaseIV == "AntiCancerPhaseIV", paste("**Phase IV** trial for some other cancer(s)"), paste(" **NOT** in Phase IV trials for any cancer."))) %>%
-     pull()
+<!-- drugs <- network_info %>% -->
+<!--   filter(TL1961DB85RegulonActivity == 1 & Miner_Target_Type == 'MutationGene') %>% -->
+<!--   select(Drug, MutationSymbol, TargetSymbol, RegulatorID, Regulon_ID,RegulatorSymbol, RMST_diff_UnderActiveMinusOverActiveMGMTMeth, DrugTrialPhaseGBM,IfAntiCancerPhaseIV, MutationRegulatorEdge) %>% -->
+<!--   unique() -->
 
-   cat(sep = "","Evidence: Patient has **",mutation, "** mutation that **" ,mutation2regulators,"** regulator, ",target.regulators, " of **", length(target.regulons),  "** active risk-associated regulons containing the target(s), ", paste("**",paste(target.list, collapse=","),"**", sep=""), " of the drug **", paste(drug, collapse=","), "** with max RMST value of **", max(rmsts), "**.\n")
-  # cat(sep="", drug, " has **", paste(gbmtrials, collapse=","), "** clinical trials for GBM.  \n" )
-  cat("  \n\n")
-  cat("  \n")
-}
+<!-- for(mutation in unique(drugs$MutationSymbol)){ -->
+<!--   cat(sep="","1. Mutation: **", mutation, "**  \n") -->
 
-```
+<!--   target.drugs <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(Drug) %>% -->
+<!--     unique() -->
+
+<!--   target.regulators <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(RegulatorSymbol) %>% -->
+<!--     unique() -->
+
+
+<!--   target.regulons <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(Regulon_ID) %>% -->
+<!--     unique() -->
+
+<!--   target.list <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(TargetSymbol) %>% -->
+<!--     unique() -->
+
+<!--   rmsts <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(RMST_diff_UnderActiveMinusOverActiveMGMTMeth) -->
+
+<!--   gbmtrials <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(DrugTrialPhaseGBM) %>% -->
+<!--     unique() -->
+
+<!--   mutation2regulators <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     select(MutationRegulatorEdge) %>% -->
+<!--     unique() %>% -->
+<!--     mutate(`MutationRegulatorEdge` = if_else(MutationRegulatorEdge == "1", "activates", "suppresses")) %>% -->
+<!--     pull() -->
+
+<!--    anticancerPhaseIVs <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     select(IfAntiCancerPhaseIV) %>% -->
+<!--     unique() %>% -->
+<!--     mutate(`IfAntiCancerPhaseIV` = if_else(IfAntiCancerPhaseIV == "AntiCancerPhaseIV", paste("**Phase IV** trial for some other cancer(s)"), paste(" **NOT** in Phase IV trials for any cancer."))) %>% -->
+<!--      pull() -->
+
+<!--    cat(sep = "","Evidence: Patient has **",mutation, "** mutation that **" ,mutation2regulators,"** regulator, ",target.regulators, " of **", length(target.regulons),  "** active risk-associated regulons containing the target(s), ", paste("**",paste(target.list, collapse=","),"**", sep=""), " of the drug **", paste(drug, collapse=","), "** with max RMST value of **", max(rmsts), "**.\n") -->
+<!--   # cat(sep="", drug, " has **", paste(gbmtrials, collapse=","), "** clinical trials for GBM.  \n" ) -->
+<!--   cat("  \n\n") -->
+<!--   cat("  \n") -->
+<!-- } -->
+
+<!-- ``` -->
 
 
 ### Summary Table
 ```{r active regulons filter, echo=FALSE, message=FALSE,warning=FALSE}
 network_table1 <- network_info %>%
-  filter(TL1961DB85RegulonActivity == 1 & Miner_Target_Type == 'RegulonGene') %>%
-  group_by(TargetSymbol) %>%
-  rename(Drug.Target = TargetSymbol) %>%
-  summarize(Drugs = paste(unique(Drug), collapse =", "),
-            Active.Regulons = paste(unique(Regulon_ID), collapse=", "),
-            Active.Regulon.TFs = paste(unique(RegulatorSymbol), collapse =", "),
-            Max.RMST = max(unique(RMST_diff_UnderActiveMinusOverActiveMGMTMeth)),
-            Mean.RMST = mean(unique(RMST_diff_UnderActiveMinusOverActiveMGMTMeth)),
-            GBM.Trials = DrugTrialPhaseGBM,
+  #filter(TL1961DB85RegulonActivity == 1 & Miner_Target_Type == 'RegulonGene') %>%
+  group_by(Target.Gene.s.) %>%
+  dplyr::rename(Drug.Target = Target.Gene.s.) %>%
+  dplyr::summarize(Drugs = paste(unique(Drug), collapse =", "),
+            `Drug Const. Regulon Activity`= Drug.Constrained.Regulon.Activity,
+            `Drug Const. Program Activity`= Drug.Constrained.Program.Activity,
+            `Regulon Activity Summary` = Regulon.Activity.Summary,
+            `GBM Trials Phase` = GBM_Trial_Phase,
+            `FDA Appr. Other` = Other.FDA.Appr.,
+            `Upstream Mutation in Patient` = paste(unique(MutatedDetail))
             ) %>%
-  unique()
+  base::unique()
 
 #print(htmltools::tagList(datatable(network_table1,rownames = F,escape = F, caption = paste("Summary of Rank Ordered Drugs ", " \n",sep=""))))
   network_table1 %>% datatable(
