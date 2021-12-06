@@ -49,7 +49,7 @@ filename <- paste("output/",patient_id, "/", patient_id, "_regulon_drug_therapy_
 
 ```
 
-### Drug Report Summary based on Patient's active risk-associated transcriptional programs.
+### Drug Report Summary based on Patient's active risk-associated regulons.
 ```{r drug summary, results='asis', echo=F, warning=F, message=F}
 
 for(target in unique(network_info$Target.Gene.s.)){
@@ -207,9 +207,11 @@ network_table1 <- network_info %>%
                 rownames = F,
                 selection = "single",
                 style = "bootstrap4",
-                extensions = c("Buttons"),
+                extensions = list("Buttons"=NULL,'RowGroup' = NULL),
                 callback = JS('table.page(3).draw(false);'),
                 options = list(
+                  rowGroup = list(dataSrc = 1),
+                  order = list(list(4, 'desc')),
                   headerCallback = DT::JS(
     "function(thead) {",
     "  $(thead).css('font-size', '80%');",
