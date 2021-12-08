@@ -19,14 +19,17 @@ source("code/patient_map_drugs.R")
 source("code/patient_drug_pathway_enrichment.R")
 source("code/patient_rankorder_drug_table.R")
 ###############################################################
+sample.name = "P76156_3"
+type = "regulon"
+
 # define input directories
-network_dir_input = "/Volumes/omics4tb2/SYGNAL/GBM-Serdar/XCures/network_activities/P76156"
+network_dir_input = paste0("/Volumes/omics4tb2/SYGNAL/GBM-Serdar/XCures/network_activities/", sample.name)
 
 # define mutations directory
-dna_dir = "/Volumes/omics4tb2/SYGNAL/XCures/P76156"
+dna_dir = paste0("/Volumes/omics4tb2/SYGNAL/XCures/","P76156")
 
 # get program info
-programs <- read_json("../data/MINER_MicroLowessRNATMM.08.24.2020/transcriptional_programs.json", simplifyVector = T)
+programs <- read_json("../data/MINER_MicroLowessRNATMM.08.24.2020/transcriptional_programs.json",simplifyVector = T)
 
 ## Read regulon gene list
 regulons <- read_json("../data/MINER_MicroLowessRNATMM.08.24.2020/regulons.json",simplifyVector = T)
@@ -57,60 +60,23 @@ mutation_files <- dir(dna_dir, pattern = "*_somatic.tsv",full.names = T,recursiv
 
 ################### Mapping ##################################
 # drug mapping for regulons
-drugs_all_regulon <- map_drugs(type = "regulon", disease = FALSE)
+drugs_all <- map_drugs(sample.id = sample.name, disease = FALSE, network_dir = network_dir_input, mutation_files = mutation_files)
 
-# drug mapping for programs
-drugs_all_program <- map_drugs(type = "program", disease = FALSE)
-
-
-################### Patient Filtering ##################################
-# patient_3
-drugs_all_regulon_3 <- drugs_all_regulon %>%
-  filter(patient == "P76156_3")
-
-drugs_all_program_3 <- drugs_all_program %>%
-  filter(patient == "P76156_3")
-
-# patient_6
-drugs_all_regulon_6 <- drugs_all_regulon %>%
-  filter(patient == "P76156_6")
-
-drugs_all_program_6 <- drugs_all_program %>%
-  filter(patient == "P76156_6")
-
-
-
-################### Get Network Details ##################################
+################## Get Network Details ##################################
 # get summarized network details
-#source("code/drug_network_details.R")
-drugs_all_regulon_3_details <- drug_network_details(data_mat = drugs_all_regulon_3)
-drugs_all_regulon_6_details <- drug_network_details(data_mat = drugs_all_regulon_6)
+drugs_all_details <- drug_network_details(data_mat = drugs_all) %>%
 
-drugs_all_program_3_details <- drug_network_details(data_mat = drugs_all_program_3)
-drugs_all_program_6_details <- drug_network_details(data_mat = drugs_all_program_6)
+# Filter for non-zero regulon and program activity
+drugs_all_details_filt <- drugs_all_details %>%
+filter(`Drug Constrained Regulon Activity` > 0 | `Drug Constrained Program Activity` > 0)
 
 ################### Get Functional Enrichment ##################################
 # get pathway information
-drugs_all_regulon_3_pathways <- drug_pathway_enrichment(input.df = drugs_all_regulon_3_details)
-drugs_all_regulon_6_pathways <- drug_pathway_enrichment(input.df = drugs_all_regulon_6_details)
+drugs_all_pathways <- drug_pathway_enrichment(input.df = drugs_all_details_filt)
 
-drugs_all_program_3_pathways <- drug_pathway_enrichment(input.df = drugs_all_program_3_details)
-drugs_all_program_6_pathways <- drug_pathway_enrichment(input.df = drugs_all_program_6_details)
+################### Write results into output file##################################
 
-################### Rank ordering and Final Files  ##################################
-drugs_all_regulon_3_final <- rank_order_drug_table(drugs_all_regulon_3_pathways)
-drugs_all_regulon_6_final <- rank_order_drug_table(drugs_all_regulon_6_pathways)
-
-drugs_all_program_3_final <- rank_order_drug_table(drugs_all_program_3_pathways)
-drugs_all_program_6_final <- rank_order_drug_table(drugs_all_program_6_pathways)
-
-sample.name = "P76156_3"
-type = "regulon"
-write_csv(drugs_all_regulon_3_final, paste0("output/", sample.name,"/",sample.name,"_",type,"_drug_therapy_activity.csv"))
-
-sample.name = "P76156_6"
-type = "regulon"
-write_csv(drugs_all_regulon_6_final, paste0("output/", sample.name,"/",sample.name,"_",type,"_drug_therapy_activity.csv"))
+write_csv(drugs_all_pathways, paste0("output/", sample.id,"/",sample.id,"_drug_therapy_activity.csv"))
 
 
 
