@@ -174,19 +174,19 @@ total_regs <- unique(c(soc_stats$all_reg, gbmtrials_stats$all_reg, fdaappr_stats
 cat(sep="", "* SYGNAL Analysis of the patient's molecular profiling data matched to <span class='badge'> **",length(total_regs),"** </span>regulons in the  mmSYGNAL model with <span class='badge'> **", length(total_oa_regs), " </span> OVERACTIVE** regulons (filtered for Drug constrained regulon activity > 0.8).\n")
 cat("\n\n")
 
-cat(sep="", "* <span class='badge'><a href='../docs/P76156_6_Analysis.html#analysis_soc'>**", length(soc_stats$oa_regs), "**</a> </span> of these regulons were OVERACTIVE for <span class='badge'>**", length(soc_stats$drugs), "** </span> **Glioblastoma SOC** drug(s) that included <span class='badge'>**",length(soc_stats$targets), "** </span> target(s).\n")
+cat(sep="", "* <span class='badge'><a href='/P76156_6_Analysis.html#analysis_soc'>**", length(soc_stats$oa_regs), "**</a> </span> of these regulons were OVERACTIVE for <span class='badge'>**", length(soc_stats$drugs), "** </span> **Glioblastoma SOC** drug(s) that included <span class='badge'>**",length(soc_stats$targets), "** </span> target(s).\n")
 cat("\n\n")
 
-cat(sep="", "* <span class='badge'><a href='../docs/P76156_6_Analysis.html#analysis_gbmtrials'>**", length(gbmtrials_stats$oa_regs), "**</a> </span>of these regulons were OVERACTIVE for <span class='badge'>**", length(gbmtrials_stats$drugs), "** </span> drug(s) that are in **Clinical Trials for GBM** that included <span class='badge'>**",length(gbmtrials_stats$targets), "** </span> target(s).\n")
+cat(sep="", "* <span class='badge'><a href='/P76156_6_Analysis.html#analysis_gbmtrials'>**", length(gbmtrials_stats$oa_regs), "**</a> </span>of these regulons were OVERACTIVE for <span class='badge'>**", length(gbmtrials_stats$drugs), "** </span> drug(s) that are in **Clinical Trials for GBM** that included <span class='badge'>**",length(gbmtrials_stats$targets), "** </span> target(s).\n")
 cat("\n\n")
 
-cat(sep="", "* <span class='badge'><a href='../docs/P76156_6_Analysis.html#analysis_fda'>**", length(fdaappr_stats$oa_regs), "**</a> </span> of these regulons were OVERACTIVE for <span class='badge'> **", length(fdaappr_stats$drugs), "** </span> drug(s) that are **FDA Approved** for other indications that included <span class='badge'> **",length(fdaappr_stats$targets), "** </span> target(s).\n")
+cat(sep="", "* <span class='badge'><a href='/P76156_6_Analysis.html#analysis_fda'>**", length(fdaappr_stats$oa_regs), "**</a> </span> of these regulons were OVERACTIVE for <span class='badge'> **", length(fdaappr_stats$drugs), "** </span> drug(s) that are **FDA Approved** for other indications that included <span class='badge'> **",length(fdaappr_stats$targets), "** </span> target(s).\n")
 cat("\n\n")
 
-cat(sep="", "*  DNA sequence analysis showed that patient has <span class='badge'> **<a href='../docs/P76156_6_Mutation_Analysis.html#patient_mutations'>", mutation_count, "** </a> </span> mutations in <span class='badge'> **", mutation_gene_count,"** </span> unique genes with frequency greater than 20%.\n")
+cat(sep="", "*  DNA sequence analysis showed that patient has <span class='badge'> **<a href='/P76156_6_Mutation_Analysis.html#patient_mutations'>", mutation_count, "** </a> </span> mutations in <span class='badge'> **", mutation_gene_count,"** </span> unique genes with frequency greater than 20%.\n")
 cat("\n\n")
 
-cat(sep="", "*  Of these mutations <span class='badge'>**<a href='../docs/P76156_6_Mutation_Analysis.html#cgi_mutations'>", length(mutations_cgi$MUTATION),"</a>** </span> identified as **cancer driver** mutations based on the analysis performed through 'Cancer Genome Interpreter'. In addition, <span class='badge'> **<a href='../docs/P76156_6_Mutation_Analysis.html#cgi_prescriptions'>", length(prescriptions_cgi$SAMPLE_ALTERATION), "</a>** </span> of these mutations were alterations described as biomarkers for a different tumor type as interpreted by Cancer Genome Interpreter.\n")
+cat(sep="", "*  Of these mutations <span class='badge'>**<a href='/P76156_6_Mutation_Analysis.html#cgi_mutations'>", length(mutations_cgi$MUTATION),"</a>** </span> identified as **cancer driver** mutations based on the analysis performed through 'Cancer Genome Interpreter'. In addition, <span class='badge'> **<a href='/P76156_6_Mutation_Analysis.html#cgi_prescriptions'>", length(prescriptions_cgi$SAMPLE_ALTERATION), "</a>** </span> of these mutations were alterations described as biomarkers for a different tumor type as interpreted by Cancer Genome Interpreter.\n")
 cat("\n\n")
 ```
 
@@ -221,7 +221,7 @@ for(target in unique(network_data_input_long$`Target Gene(s)`)){
   
    #cat("target:", target, "drugs:", drugs, "mech:", drug_mech, "act:", reg_activity, "sum:", reg_activity_sum, "phase:", gbm_phase, "pmid:", pmid, "trials:", paste0(trials1, collapse=","), "\n")
   
-  tmp00 <- tibble(Target = paste0('<a href="../docs/P76156_6_analysis.html#',target, '">', target,'</a>'), `Drug(s)`= paste0(drugs, collapse=", "), `Drug Mechanism` = drug_mech, `Regulon Activity` = reg_activity,`Regulon Activity Summary` = reg_activity_sum, `GBM Trial Phase` = gbm_phase, pmid, `GBM Trials` = trials1) %>%
+  tmp00 <- tibble(Target = paste0('<a href="/P76156_6_Analysis.html#',target, '">', target,'</a>'), `Drug(s)`= paste0(drugs, collapse=", "), `Drug Mechanism` = drug_mech, `Regulon Activity` = reg_activity,`Regulon Activity Summary` = reg_activity_sum, `GBM Trial Phase` = gbm_phase, pmid, `GBM Trials` = trials1) %>%
     mutate(Literature = if_else(pmid !=0, pmid, as.integer(0))) %>%
     select(-pmid) %>%
     unique()
