@@ -12,6 +12,7 @@ library(ReactomePA)
 library(AnnotationDbi)
 library(org.Hs.eg.db)
 library(data.table)
+library(tictoc)
 source("code/utilities_drug.R")
 source("code/patient_get_network_details.R")
 source("code/regulon_enrichment.R")
@@ -22,65 +23,102 @@ source("code/patient_rankorder_drug_table.R")
 sample.name = "P76156_3"
 type = "regulon"
 
-# define input directories
-network_dir_input = paste0("/Volumes/omics4tb2/SYGNAL/GBM-Serdar/XCures/network_activities/", sample.name)
+analyze_patient <- function(sample.name)
+{
 
-# define mutations directory
-dna_dir = paste0("/Volumes/omics4tb2/SYGNAL/XCures/","P76156")
+  # define input directories
+  network_dir_input = paste0("/Volumes/omics4tb2/SYGNAL/GBM-Serdar/XCures/network_activities/", sample.name)
 
-# get program info
-programs <- read_json("../data/MINER_MicroLowessRNATMM.08.24.2020/transcriptional_programs.json",simplifyVector = T)
+  # define mutations directory
+  dna_dir = paste0("/Volumes/omics4tb2/SYGNAL/XCures/","P76156")
 
-## Read regulon gene list
-regulons <- read_json("../data/MINER_MicroLowessRNATMM.08.24.2020/regulons.json",simplifyVector = T)
+  # get program info
+  programs <- read_json("../data/MINER_MicroLowessRNATMM.08.24.2020/transcriptional_programs.json",simplifyVector = T)
+  cat("Reading `Program information` is done\n")
 
-# reformat regulons
-programs_df <- ldply(programs, data.frame) %>%
-  dplyr::rename("Program" = 1, "Regulon" = 2)
+  ## Read regulon gene list
+  regulons <- read_json("../data/MINER_MicroLowessRNATMM.08.24.2020/regulons.json",simplifyVector = T)
+  cat("Reading `Regulon information` is done\n")
 
-# get drug information
-drug_info <- read_csv("../data/PreliminaryDrugTableForTherapyPrioritizationGBMMINER.csv")
+  # reformat regulons
+  programs_df <- ldply(programs, data.frame) %>%
+    dplyr::rename("Program" = 1, "Regulon" = 2)
 
-# modify drug information
-drug_info_pr <- tibble()
-for(i in 1: length(drug_info$MutationSymbol)){
-  my_row = drug_info[i,]
-  regulon = as.character(drug_info[i,"Regulon"])
+  # get disease relevant drug information
+  #drug_info <- read_csv("../data/PreliminaryDrugTableForTherapyPrioritizationGBMMINER.csv")
 
-  program = programs_df %>%
-    filter(Regulon == regulon) %>%
-    pull(Program)
+  #drug_info <- read.csv("../data/GBM_Master_Drugs_Mapped_CMFlows_120921.csv")
+  drug_info_pr <- read.csv("../data/GBM_Master_Drugs_Mapped_CMFlows_120921_with_regulons.csv") %>%
+    mutate(Regulon_ID = as.character(Regulon_ID))
 
-  drug_info_pr <- bind_rows(drug_info_pr, bind_cols(my_row, Program = as.integer(program)))
+  # # modify drug information
+  # drug_info_pr <- tibble()
+  # for(i in 1: length(drug_info$Drug)){
+  #   my_row = drug_info[i,]
+  #   regulon = as.character(drug_info[i,"Regulon_ID"])
+  #
+  #   program = programs_df %>%
+  #     filter(Regulon == regulon) %>%
+  #     pull(Program)
+  #
+  #   drug_info_pr <- bind_rows(drug_info_pr, bind_cols(my_row, Program = as.integer(program)))
+  # }
+  # cat("Reading and formnatting `Drug information` is done\n")
+  #write.csv(drug_info_pr, "../data/GBM_Master_Drugs_Mapped_CMFlows_120921_with_regulons.csv")
+
+  # Get list of all mutation files from XCures folder
+  mutation_files <- dir(dna_dir, pattern = "*_somatic.tsv",full.names = T,recursive = T)
+
+
+  ################### Mapping ##################################
+  # drug mapping for regulons
+  tic("Mapping drugs...")
+  drugs_all <- map_drugs(drug_info_pr,sample.id = sample.name, disease = FALSE, network_dir = network_dir_input, mutation_files = mutation_files)
+  toc()
+
+  ################## Get Network Details ##################################
+  # get summarized network details
+  tic("Getting Network details...")
+  drugs_all_details <- drug_network_details(data_mat = drugs_all)
+  toc()
+
+  # Filter for non-zero regulon and program activity
+  drugs_all_details_filt <- drugs_all_details %>%
+    filter(`Drug Constrained Regulon Activity` > 0.8)
+
+  # dd <- drugs_all_details_filt %>%
+  #   #group_by(`Target Gene(s)`) %>%
+  #   mutate(DD = ddply(drugs_all_details_filt, .(`Target Gene(s)`), summarize, Drug=paste(Drug, collapse=",")))
+  # ################### Get Functional Enrichment ##################################
+  # get pathway information
+  tic("Performing pathway enrichment...")
+  drugs_all_pathways <- drug_pathway_enrichment(input.df = drugs_all_details_filt)
+  toc()
+
+  drugs_all_pathways_ordered <- drugs_all_pathways %>%
+    group_by(`Target Gene(s)`) %>%
+    arrange(desc(max_glioblastoma.multiforme_phase,`Drug Constrained Regulon Activity`,`Other FDA Appr.`))
+
+  ################### Write results into output file##################################
+
+  write_csv(drugs_all_pathways_ordered, paste0("output/", sample.name,"/",sample.name,"_drug_therapy_activity.csv"))
 }
 
-# Get list of all mutation files from XCures folder
-mutation_files <- dir(dna_dir, pattern = "*_somatic.tsv",full.names = T,recursive = T)
 
-
-################### Mapping ##################################
-# drug mapping for regulons
-drugs_all <- map_drugs(sample.id = sample.name, disease = FALSE, network_dir = network_dir_input, mutation_files = mutation_files)
-
-################## Get Network Details ##################################
-# get summarized network details
-drugs_all_details <- drug_network_details(data_mat = drugs_all) %>%
-
-# Filter for non-zero regulon and program activity
-drugs_all_details_filt <- drugs_all_details %>%
-filter(`Drug Constrained Regulon Activity` > 0 | `Drug Constrained Program Activity` > 0)
-
-################### Get Functional Enrichment ##################################
-# get pathway information
-drugs_all_pathways <- drug_pathway_enrichment(input.df = drugs_all_details_filt)
-
-################### Write results into output file##################################
-
-write_csv(drugs_all_pathways, paste0("output/", sample.id,"/",sample.id,"_drug_therapy_activity.csv"))
+# Analyze patient P76156_3
+P76156_3 <- analyze_patient(sample.name = "P76156_3")
+P76156_6 <- analyze_patient(sample.name = "P76156_6")
 
 
 
 
+
+
+d1 <- read_csv("../data/opentargets_gbm.csv")
+
+d2 <- d1 %>%
+  separate_rows(c("approved_name","target_id"), sep = ":")
+write_csv(d2, "../data/opentargets_gbm_longer.csv")
 
 
 

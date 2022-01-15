@@ -13,29 +13,32 @@ library(AnnotationDbi)
 library(org.Hs.eg.db)
 library(data.table)
 source("code/regulon_enrichment.R")
+
 ############### function  for pathway enrichment ###############
 drug_pathway_enrichment <- function(input.df) {
   # drug pathway enrichment
   drugs_all_regulon_pathways <- data.frame()
 
-  total.drugs <- length(input.df$Drug)
+  total.targets <- length(unique(input.df$`Target Gene(s)`))
+  count = 0
 
-  for (i in input.df$Drug) {
+  for (i in unique(input.df$`Target Gene(s)`)) {
+    count = count + 1
     cat("\nProcessing ",
         i,
         " ",
-        input.df$Drug[i],
+        count,
         "/",
-        total.drugs,
+        total.targets,
         "\n")
 
     # select the drug row
     my.row = input.df %>%
-      filter(Drug == i)
+      filter(`Target Gene(s)` == i)
 
     # get all the overactive regulons
     my.regulons1 = input.df %>%
-      filter(Drug == i) %>%
+      filter(`Target Gene(s)` == i) %>%
       pull(`Overactive Regulon(s)`) %>%
       unique()
 
@@ -106,9 +109,9 @@ drug_pathway_enrichment <- function(input.df) {
           drugs_all_regulon_pathways,
           cbind(
             my.row,
-            Reactome = paste0(enrichment.list$table8$Description, collapse =
+            Reactome = paste0(enrichment.list$table8$Description[1:5], collapse =
                                 ":"),
-            GO = paste0(enrichment.list$table6$Description, collapse =
+            GO = paste0(enrichment.list$table6$Description[1:5], collapse =
                           ":"),
             Hallmarks =  paste0(enrichment.list$table1$Description, collapse =
                                   ":")

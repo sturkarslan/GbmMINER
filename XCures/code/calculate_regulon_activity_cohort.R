@@ -7,7 +7,7 @@ all_prog_activity <- read_csv("data/program_activity_all.csv") %>%
   dplyr::rename("Program" = 1)
 
 samples <- all_reg_activity %>%
-  select(!matches("Regulon")) %>%
+  dplyr::select(!matches("Regulon")) %>%
   colnames()
 
 all_patient_reg_activity <- tibble(Drug = unique(drug_info_pr$Drug))

@@ -32,7 +32,7 @@ getRegulonsByActivity <- function(drug, mat, value) {
     dplyr::filter(Drug==drug) %>%
     dplyr::filter(reg_activity==value) ->
     tmp
-  regs <- ifelse(nrow(tmp) == 0, NA, paste(sort(unique(tmp$Regulon[tmp$reg_activity==value])),
+  regs <- ifelse(nrow(tmp) == 0, NA, paste(sort(unique(tmp$Regulon_ID[tmp$reg_activity==value])),
                                            collapse=","))
 
   return(c(Drug=drug, regulons=regs))
@@ -185,10 +185,11 @@ getDrugTherapyActivity <- function(drug_mat, program, regulon, fdr_cut=0.2) {
   ## rename inputs for joining
   colnames(program) <- c("program", "prog_activity")
   colnames(regulon) <- c("regulon", "reg_activity")
+  regulon$regulon <- as.character(regulon$regulon)
 
   ## join regulon and program activity to drug info
   drug_mat %>%
-    dplyr::left_join(regulon,by=c("Regulon"="regulon")) %>%
+    dplyr::left_join(regulon, by=c("Regulon_ID"="regulon")) %>%
     dplyr::left_join(program, by=c("Program"="program")) %>%
     data.table() ->
     drug_rel
@@ -204,7 +205,7 @@ getDrugTherapyActivity <- function(drug_mat, program, regulon, fdr_cut=0.2) {
            by=.(Drug)]
 
   ## get list of all regulons for each drug
-  drug_rel[, DrugRegulonAll:=paste0(sort(unique(Regulon)), collapse=","),
+  drug_rel[, DrugRegulonAll:=paste0(sort(unique(Regulon_ID)), collapse=","),
            by=.(Drug)]
 
   ## get list of regulons that are over active
@@ -243,7 +244,7 @@ getDrugTherapyActivity <- function(drug_mat, program, regulon, fdr_cut=0.2) {
 
   ## TODO: check sign of mean of RSMT program direction
   ## calculate regulon disease relevant statistics
-  drug_rel[, DrugMeanRMSTRegulon:=meanNA(RMST_diff_UnderActiveMinusOverActiveMGMTUnMeth), by=.(Drug)]
+ # drug_rel[, DrugMeanRMSTRegulon:=meanNA(RMST_diff_UnderActiveMinusOverActiveMGMTUnMeth), by=.(Drug)]
   #drug_rel[, DrugRMSTRegulon_MeanDirection:=meanNA(RMSTRegulonDirection), by=.(Drug)]
   #drug_rel[, DrugRMSTRegulonMeanPvalue:=meanNA(RMST_reg_pval), by=.(Drug)]
 
@@ -271,14 +272,21 @@ getDrugTherapyActivity <- function(drug_mat, program, regulon, fdr_cut=0.2) {
 
     ## reorder
     drug_tmp %>%
-    dplyr::select(Drug, DrugMechOfAction, DrugTargetAll,DrugRegulonAll, DrugProgramAll,
-                  DrugConstrainedRegulonActivity, DrugRegulonOverActive, DrugRegulonUnderActive,
-                  DrugConstrainedProgramActivity, DrugProgramOverActive, DrugProgramUnderActive,
-                  DrugMeanRMSTRegulon,MutationSymbol,IfCancerDriverMutation,RegulatorSymbol,
-                  RegulatorType, MutationRegulatorEdge,MutationRegulonEdge,
-                  SpearmanCorrelationTFAndEigenGene,`IfCRISPR-Cas9SignificantTF`,
-                  Cancer_PhaseIV,Miner_Target_Type,IfDETFForTCGAGBM,RNAiTFGeneEssentialityAchilles,
-                  DrugTrialPhaseGBM
+      dplyr::select(Drug, mechanism_of_action, DrugTargetAll,DrugRegulonAll, DrugProgramAll,
+                    DrugConstrainedRegulonActivity, DrugRegulonOverActive, DrugRegulonUnderActive,
+                    DrugConstrainedProgramActivity, DrugProgramOverActive, DrugProgramUnderActive,
+                    MutationGene,RegulatorSymbol,
+                    max_trial_phase,Miner_Target_Type,
+                    max_glioblastoma.multiforme_phase,
+                    CHEMBL_ID,molecule_type,action_type,target_class,toxicity_class,meddra_soc_code
+    # dplyr::select(Drug, DrugMechOfAction, DrugTargetAll,DrugRegulonAll, DrugProgramAll,
+    #               DrugConstrainedRegulonActivity, DrugRegulonOverActive, DrugRegulonUnderActive,
+    #               DrugConstrainedProgramActivity, DrugProgramOverActive, DrugProgramUnderActive,
+    #               DrugMeanRMSTRegulon,MutationSymbol,IfCancerDriverMutation,RegulatorSymbol,
+    #               RegulatorType, MutationRegulatorEdge,MutationRegulonEdge,
+    #               SpearmanCorrelationTFAndEigenGene,`IfCRISPR-Cas9SignificantTF`,
+    #               Cancer_PhaseIV,Miner_Target_Type,IfDETFForTCGAGBM,RNAiTFGeneEssentialityAchilles,
+    #               DrugTrialPhaseGBM
 
 
 

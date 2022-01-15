@@ -13,7 +13,7 @@ library(AnnotationDbi)
 library(org.Hs.eg.db)
 library(data.table)
 ################ Mapping function   ################
-map_drugs <- function(sample.id = sample.name, type="regulon", disease=TRUE, network_dir=network_dir_input,mutation_files=mutation_files){
+map_drugs <- function(drug_info_pr, sample.id = sample.name, type="regulon", disease=TRUE, network_dir=network_dir_input,mutation_files=mutation_files){
 
   all.samples.activities <- data.frame()
 
@@ -69,10 +69,10 @@ map_drugs <- function(sample.id = sample.name, type="regulon", disease=TRUE, net
     base::unique()
 
   drug_reg_mut <- drug_reg %>%
-    mutate(MutatedInPatient = if_else(MutationSymbol %in% patient_mutations, paste("TRUE"), paste("FALSE"))) %>%
+    mutate(MutatedInPatient = if_else(MutationGene %in% patient_mutations, paste("TRUE"), paste("FALSE"))) %>%
     mutate(TargetMutatedInPatient = if_else(strsplit(DrugTargetAll,split = ",",fixed = T) %in% patient_mutations,paste("TRUE"), paste("FALSE")))
 
-  write_csv(drug_reg_mut, paste0("output/", sample.id,"/",sample.id,"_drug_therapy_activity.csv"))
+  #write_csv(drug_reg_mut, paste0("output/", sample.id,"/",sample.id,"_drug_therapy_activity.csv"))
   all.samples.activities <- bind_rows(all.samples.activities, drug_reg_mut)
   return(all.samples.activities)
 

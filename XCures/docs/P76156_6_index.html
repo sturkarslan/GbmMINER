@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2022-01-09" />
+
+<title>P76156_6 Patient Report</title>
+
+<script src="site_libs/header-attrs-2.4/header-attrs.js"></script>
+<script src="site_libs/jquery-1.12.4/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.15/datatables.js"></script>
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+<link href="site_libs/dt-ext-rowgroup-1.10.20/css/rowGroup.dataTables.min.css" rel="stylesheet" />
+<script src="site_libs/dt-ext-rowgroup-1.10.20/js/dataTables.rowGroup.min.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">SYGNOMICS Patient Report</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Summary</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    P76156 2020
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="P76156_3_Analysis.html">P76156 2020 Network</a>
+    </li>
+    <li>
+      <a href="P76156_3_Mutation_Analysis.html">P76156 2020 Mutations</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    P76156 2021
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="P76156_6_Analysis.html">P76156 2021 Network</a>
+    </li>
+    <li>
+      <a href="P76156_6_Mutation_Analysis.html">P76156 2021 Mutations</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">P76156_6 Patient Report</h1>
+<h4 class="date">01/09/2022</h4>
+
+</div>
+
+
+<div id="htmlwidget-95f864e3cddfd3e29fdc" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-95f864e3cddfd3e29fdc">{"x":{"filter":"none","data":[["1"],["P76156_6"],[""],[""],["Methylated"],["Yes"],["Yes"],["Yes"],["Unknown"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Patient ID<\/th>\n      <th>Age<\/th>\n      <th>Sex<\/th>\n      <th>MGMT Methylation<\/th>\n      <th>ExomeSeq<\/th>\n      <th>RNASeq<\/th>\n      <th>CNV<\/th>\n      <th>Profiling Type<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script>
+<div id="summary" class="section level2">
+<h2>Summary</h2>
+<ul>
+<li><p>SYGNAL Analysis of the patient’s molecular profiling data matched to <span class="badge"> <strong>147</strong> </span>regulons in the mmSYGNAL model with <span class='badge'> <strong>133 </span> OVERACTIVE</strong> regulons (filtered for Drug constrained regulon activity &gt; 0.8).</p></li>
+<li><p><span class="badge"><a href='../docs/P76156_6_Analysis.html#analysis_soc'><strong>6</strong></a> </span> of these regulons were OVERACTIVE for <span class="badge"><strong>1</strong> </span> <strong>Glioblastoma SOC</strong> drug(s) that included <span class="badge"><strong>1</strong> </span> target(s).</p></li>
+<li><p><span class="badge"><a href='../docs/P76156_6_Analysis.html#analysis_gbmtrials'><strong>13</strong></a> </span>of these regulons were OVERACTIVE for <span class="badge"><strong>1</strong> </span> drug(s) that are in <strong>Clinical Trials for GBM</strong> that included <span class="badge"><strong>1</strong> </span> target(s).</p></li>
+<li><p><span class="badge"><a href='../docs/P76156_6_Analysis.html#analysis_fda'><strong>133</strong></a> </span> of these regulons were OVERACTIVE for <span class="badge"> <strong>34</strong> </span> drug(s) that are <strong>FDA Approved</strong> for other indications that included <span class="badge"> <strong>21</strong> </span> target(s).</p></li>
+<li><p>DNA sequence analysis showed that patient has <span class="badge"> <strong><a href='../docs/P76156_6_Mutation_Analysis.html#patient_mutations'>79</strong> </a> </span> mutations in <span class="badge"> <strong>66</strong> </span> unique genes with frequency greater than 20%.</p></li>
+<li><p>Of these mutations <span class="badge"><strong><a href='../docs/P76156_6_Mutation_Analysis.html#cgi_mutations'>4</a></strong> </span> identified as <strong>cancer driver</strong> mutations based on the analysis performed through ‘Cancer Genome Interpreter’. In addition, <span class="badge"> <strong><a href='../docs/P76156_6_Mutation_Analysis.html#cgi_prescriptions'>3</a></strong> </span> of these mutations were alterations described as biomarkers for a different tumor type as interpreted by Cancer Genome Interpreter.</p></li>
+</ul>
+</div>
+<div id="list-of-top-ranked-targets" class="section level2">
+<h2>List of Top ranked targets</h2>
+<p><div align="right">
+<button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#ranked_targets"> ? </button>
+</div><div class="collapse" id="ranked_targets">
+<div class="well">
+A table of SYGNAL predicted targets, associated drugs and other relevant information from the network model and other resources are presented. A given target(s) may have more than one drug associated. Clicking on the target name will take you to the more detailed information for the given target and associated drugs. Table is mainly rank ordered based on the Regulon Activity, Literature Evidence and presence/absence of GBM related trials.
+ 
+<p>
+<b>Short description of fields</b>
+</p>
+<ul>
+<li>Target: Drug target from the network that is predicted to be associated with disease progression.</li>
+<li>Drug(s) that are associated with given target</li>
+<li>Drug Mechanism: Mechanism of the drug. If there are more than one drug, multiple mechanisms are collapsed with ':'</li>
+<li>Regulon activity: Measure of how active is the regulon(s) that are associated with the target in the patient's tumor.</li>
+<li>Regulon Activity Summary: Count of Overactive(O), Underactive(U) or All (A) regulons in the patient.</li>
+<li>GBM Trials: How many trials match to listed drugs in GBM.</li>
+<li>Literature Evidence: Number of curated literature evidence for the target and GBM. Click on the target name to get more details.</li>
+</ul>
+</div>
+</div></p>
+<div id="glioblastoma-soc" class="section level3">
+<h3>Glioblastoma SOC</h3>
+<div id="htmlwidget-8190003842d0f9c6ceea" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8190003842d0f9c6ceea">{"x":{"filter":"none","extensions":["RowGroup"],"data":[["1"],["<a href=\"../docs/P76156_6_analysis.html#GSR\">GSR<\/a>"],["CARMUSTINE"],["RNA inhibitor:DNA inhibitor:Glutathione reductase inhibitor"],[0.86],["O: 6 U: 0 A: 7"],["4"],[36],[4]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Target<\/th>\n      <th>Drug(s)<\/th>\n      <th>Drug Mechanism<\/th>\n      <th>Regulon Activity<\/th>\n      <th>Regulon Activity Summary<\/th>\n      <th>GBM Trial Phase<\/th>\n      <th>GBM Trials<\/th>\n      <th>Literature<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","bPaginate":false,"columnDefs":[{"className":"dt-right","targets":[4,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="glioblastoma-clinical-trials" class="section level3">
+<h3>Glioblastoma Clinical Trials</h3>
+<div id="htmlwidget-f8645a02e743035c9dd6" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-f8645a02e743035c9dd6">{"x":{"filter":"none","extensions":["RowGroup"],"data":[["1"],["<a href=\"../docs/P76156_6_analysis.html#RRM2\">RRM2<\/a>"],["HYDROXYUREA"],["Ribonucleoside-diphosphate reductase RR1 inhibitor"],[1],["O: 13 U: 0 A: 13"],["3"],[9],[3]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Target<\/th>\n      <th>Drug(s)<\/th>\n      <th>Drug Mechanism<\/th>\n      <th>Regulon Activity<\/th>\n      <th>Regulon Activity Summary<\/th>\n      <th>GBM Trial Phase<\/th>\n      <th>GBM Trials<\/th>\n      <th>Literature<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","columnDefs":[{"className":"dt-right","targets":[4,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="drugs-fda-approved-for-other-indications" class="section level3">
+<h3>Drugs FDA Approved for other indications</h3>
+<div id="htmlwidget-9fc2086b5b089d172d7e" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-9fc2086b5b089d172d7e">{"x":{"filter":"none","extensions":["RowGroup"],"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"],["<a href=\"../docs/P76156_6_analysis.html#RRM2\">RRM2<\/a>","<a href=\"../docs/P76156_6_analysis.html#ABL1\">ABL1<\/a>","<a href=\"../docs/P76156_6_analysis.html#NDUFA13\">NDUFA13<\/a>","<a href=\"../docs/P76156_6_analysis.html#TSG101\">TSG101<\/a>","<a href=\"../docs/P76156_6_analysis.html#HBB\">HBB<\/a>","<a href=\"../docs/P76156_6_analysis.html#VKORC1\">VKORC1<\/a>","<a href=\"../docs/P76156_6_analysis.html#RTN4\">RTN4<\/a>","<a href=\"../docs/P76156_6_analysis.html#LOXL2\">LOXL2<\/a>","<a href=\"../docs/P76156_6_analysis.html#BSG\">BSG<\/a>","<a href=\"../docs/P76156_6_analysis.html#NOTCH1\">NOTCH1<\/a>","<a href=\"../docs/P76156_6_analysis.html#ABAT\">ABAT<\/a>","<a href=\"../docs/P76156_6_analysis.html#ELN\">ELN<\/a>","<a href=\"../docs/P76156_6_analysis.html#MAPK1\">MAPK1<\/a>","<a href=\"../docs/P76156_6_analysis.html#MAPK3\">MAPK3<\/a>","<a href=\"../docs/P76156_6_analysis.html#GSR\">GSR<\/a>","<a href=\"../docs/P76156_6_analysis.html#HMGB1\">HMGB1<\/a>","<a href=\"../docs/P76156_6_analysis.html#HSP90AB1\">HSP90AB1<\/a>","<a href=\"../docs/P76156_6_analysis.html#HSPA8\">HSPA8<\/a>","<a href=\"../docs/P76156_6_analysis.html#SOD1\">SOD1<\/a>","<a href=\"../docs/P76156_6_analysis.html#ACVR2B\">ACVR2B<\/a>","<a href=\"../docs/P76156_6_analysis.html#SPP1\">SPP1<\/a>"],["GALLIUM NITRATE","FLUMATINIB, NILOTINIB HYDROCHLORIDE MONOHYDRATE, REBASTINIB, NILOTINIB, ASCIMINIB","ME-344","FGI-101-1A6","EFAPROXIRAL, VOXELOTOR","WARFARIN, DICUMAROL, PHENINDIONE, ACENOCOUMAROL, PHENPROCOUMON, WARFARIN SODIUM, WARFARIN POTASSIUM","OZANEZUMAB, ATINUMAB","SIMTUZUMAB","GAVILIMOMAB","BRONTICTUZUMAB","VIGABATRIN","VONAPANITASE","MK-8353, ULIXERTINIB, RAVOXERTINIB","MK-8353, ULIXERTINIB, RAVOXERTINIB","OXIGLUTATIONE","CD24FC","CD24FC","FORIGERIMOD, FORIGERIMOD ACETATE","TOFERSEN","BIMAGRUMAB","ASK-8007"],["Ribonucleoside-diphosphate reductase RR1 inhibitor:Hydroxyapatite sequestering agent","Tyrosine-protein kinase ABL inhibitor","Mitochondrial complex I (NADH dehydrogenase) inhibitor","Tumor susceptibility gene 101 protein inhibitor","Hemoglobin HbA negative modulator, Hemoglobin HbA positive modulator","Vitamin k epoxide reductase complex subunit 1 isoform 1 inhibitor","Reticulon-4 inhibitor","Lysyl oxidase homolog 2 inhibitor","Basigin other","Neurogenic locus notch homolog protein 1 inhibitor","Gamma-amino-N-butyrate transaminase inhibitor","Elastin proteolytic enzyme","MAP kinase ERK1 inhibitor:MAP kinase ERK2 inhibitor, MAP kinase ERK2 inhibitor:MAP kinase ERK1 inhibitor","MAP kinase ERK1 inhibitor:MAP kinase ERK2 inhibitor, MAP kinase ERK2 inhibitor:MAP kinase ERK1 inhibitor","Glutathione reductase","Heat shock 70 kDa protein 1A/1B inhibitor:Sialic acid-binding Ig-like lectin 10 modulator:High mobility group protein B1 inhibitor:Heat shock protein HSP90 inhibitor","Heat shock 70 kDa protein 1A/1B inhibitor:Sialic acid-binding Ig-like lectin 10 modulator:High mobility group protein B1 inhibitor:Heat shock protein HSP90 inhibitor","Heat shock cognate 71 kDa protein inhibitor","SOD1 mRNA inhibitor","Activin receptor type-2B antagonist","Osteopontin inhibitor"],[1,1,1,1,1,1,1,1,1,1,1,1,0.95,0.95,0.86,0.85,0.85,0.83,0.83,0.83,0.82],["O: 13 U: 0 A: 13","O: 5 U: 0 A: 5","O: 5 U: 0 A: 5","O: 2 U: 0 A: 2","O: 2 U: 0 A: 2","O: 2 U: 0 A: 2","O: 3 U: 0 A: 3","O: 1 U: 0 A: 1","O: 2 U: 0 A: 2","O: 4 U: 0 A: 4","O: 17 U: 0 A: 17","O: 1 U: 0 A: 1","O: 19 U: 0 A: 20","O: 19 U: 0 A: 20","O: 6 U: 0 A: 7","O: 11 U: 0 A: 13","O: 11 U: 0 A: 13","O: 25 U: 0 A: 30","O: 5 U: 0 A: 6","O: 5 U: 0 A: 6","O: 14 U: 0 A: 17"],["NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA","NA"],[0,0,0,0,1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0],[3,2,1,1,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Target<\/th>\n      <th>Drug(s)<\/th>\n      <th>Drug Mechanism<\/th>\n      <th>Regulon Activity<\/th>\n      <th>Regulon Activity Summary<\/th>\n      <th>GBM Trial Phase<\/th>\n      <th>GBM Trials<\/th>\n      <th>Literature<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","bPaginate":false,"columnDefs":[{"className":"dt-right","targets":[4,7,8]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+<div id="patient-mutations" class="section level2">
+<h2>Patient Mutations</h2>
+<p><a name="Mutations"></a>### Mutations identified as driver(s) <div align="right">
+<button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#cgi_mutations"> ? </button>
+</div><div class="collapse" id="cgi_mutations">
+<div class="well">
+The interpretation of the patients mutations was performed through a report obtained from 
+<a href="https://www.cancergenomeinterpreter.org">Cancer Genome Interpreter</a>
+ database. Cancer Genome Interpreter annotates the biological and clinical relevance of tumor alterations. For more information see 
+<a href="https://www.biorxiv.org/content/10.1101/140475v3">Tamborero et al.,</a>
+
+
+<p>
+<b>BOOSTDM_DS/Oncogenicity</b>
+</p>
+<ul>
+<li>Driver according to BoostDM tissue specific model: a model built from mutations observed in this gene in this tumor type.</li>
+<li>Driver according to BoostDM non tissue specific model: a model built from mutations observed in this gene in other tumor type.</li>
+<li>Driver according to OncodriveMUT: there is no tissue specific or non-specific model to evaluate this mutation or indel; hence it is classified as driver through a set of rules implemented by OncodriveMUT.</li>
+<li>Passenger: Classified as passenger through a BoostDM model or OncodriveMUT</li>
+<li>Non-affecting: Non-protein affecting mutation.</li>
+</ul>
+</div>
+</div><div id="htmlwidget-c6a45d79db295e97f3f0" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-c6a45d79db295e97f3f0">{"x":{"filter":"none","extensions":["RowGroup"],"data":[["1","2","3","4"],["chrX:40072519 C>A","chr19:17838373 C>T","chr8:100705051 G>A","chr12:883435 T>G"],["X","19","8","12"],["SNV","SNV","SNV","SNV"],["BCOR","JAK3","PABPC1","WNK1"],["G943*","V487M","R565W","F1590C"],["driver (oncodriveMUT)","driver (oncodriveMUT)","driver (oncodriveMUT)","driver (oncodriveMUT)"],["stop_gained","missense_variant","missense_variant","missense_variant"],["OTHER","OTHER","OTHER","NO"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>MUTATION<\/th>\n      <th>CHR<\/th>\n      <th>TYPE<\/th>\n      <th>SYMBOL<\/th>\n      <th>PROTEIN_CHANGE<\/th>\n      <th>BOOSTDM_DS<\/th>\n      <th>CONSEQUENCE<\/th>\n      <th>IS_CANCER_GENE<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","bPaginate":false,"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script></p>
+<div id="alterations-described-as-biomarkers" class="section level3">
+<h3>Alterations described as biomarkers</h3>
+<p><div align="right">
+<button class="btn btn-primary btn-sm" data-toggle="collapse" data-target="#prescriptions"> ? </button>
+</div><div class="collapse" id="prescriptions">
+<div class="well">
+A biomarkers report as obtained from 
+<a href="https://www.cancergenomeinterpreter.org">Cancer Genome Interpreter</a>
+ database. It contains the putative biomarkers of drug response found in the tumor organized according to distinct levels of clinical relevance.
+
+<p>
+<b>Response</b>
+</p>
+<ul>
+<li>Responsive: the genomic alteration is associated to sensitivity to the drug</li>
+<li>No responsive: the genomic alteration is not associated to sensitivity to the drug</li>
+<li>Resistant: the genomic alteration is associated to resistance to the drug</li>
+<li>Increased toxicity: the genomic alteration enhances the toxicity related to the use of the drug</li>
+</ul>
+<p>
+<b>Evidence</b>
+</p>
+<ul>
+<li>Level A: corresponds to biomarkers used in professional guidelines of FDA approved drugs.</li>
+<li>Level B: groups biomarkers observed in clinical trials.</li>
+<li>Level C: corresponds to biomarkers identified from small group studies or case studies.</li>
+<li>Level D: biomarkers have been identified in pre-clinical studies.</li>
+</ul>
+</div>
+</div><div id="htmlwidget-6c967a5a453d3371d0d8" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6c967a5a453d3371d0d8">{"x":{"filter":"none","extensions":["RowGroup"],"data":[["1","2","3"],["BCOR MUT (G943*)","JAK3 MUT (V487M)","JAK3 MUT (V487M)"],["BCOR oncogenic mutation","JAK3 (A572V,A573V)","JAK3 (R657Q,I87T,Q501H)"],["Enzastaurin (PKCb inhibitor)","JAK inhibitors","JAK inhibitors"],["Stomach","Lymphoma","Megakaryoblastic leukemia"],["Responsive","Responsive","Responsive"],["D","D","D"],["PMID:27397505","PMID:22705984","PMID:18397343"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>SAMPLE_ALTERATION<\/th>\n      <th>BIOMARKER<\/th>\n      <th>DRUGS<\/th>\n      <th>DISEASES<\/th>\n      <th>RESPONSE<\/th>\n      <th>EVIDENCE_LABEL<\/th>\n      <th>SOURCE_DETAILS<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"","bPaginate":false,"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}]}},"evals":[],"jsHooks":[]}</script></p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.0.2 (2020-06-22)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Catalina 10.15.7
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] grid      stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] bsplus_0.1.3      htmltools_0.5.1.1 plyr_1.8.6        kableExtra_1.3.4  gridExtra_2.3     DT_0.15           forcats_0.5.0     stringr_1.4.0     dplyr_1.0.7       purrr_0.3.4       readr_1.4.0       tidyr_1.1.2       tibble_3.0.4      ggplot2_3.3.2     tidyverse_1.3.0  
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.7        svglite_2.0.0     lubridate_1.7.9   assertthat_0.2.1  rprojroot_2.0.2   digest_0.6.27     utf8_1.1.4        R6_2.5.0          cellranger_1.1.0  backports_1.1.10  reprex_0.3.0      evaluate_0.14     httr_1.4.2        pillar_1.6.2      rlang_0.4.11      readxl_1.3.1      rstudioapi_0.13   blob_1.2.1        rmarkdown_2.4     webshot_0.5.2     htmlwidgets_1.5.2 munsell_0.5.0     broom_0.7.1       compiler_4.0.2    httpuv_1.5.4      modelr_0.1.8      xfun_0.24         systemfonts_1.0.2 pkgconfig_2.0.3   tidyselect_1.1.0  workflowr_1.6.2   viridisLite_0.3.0 fansi_0.4.1       crayon_1.3.4      dbplyr_1.4.4      withr_2.3.0       later_1.1.0.1     jsonlite_1.7.2    gtable_0.3.0      lifecycle_1.0.0   DBI_1.1.0         git2r_0.27.1      magrittr_2.0.1    scales_1.1.1      cli_2.2.0         stringi_1.5.3     fs_1.5.0          promises_1.1.1    xml2_1.3.2        ellipsis_0.3.2    generics_0.0.2    vctrs_0.3.8       tools_4.0.2       glue_1.4.2        crosstalk_1.1.0.1 hms_0.5.3         yaml_2.2.1        colorspace_2.0-0  rvest_0.3.6       knitr_1.30        haven_2.3.1      </code></pre>
+</div>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

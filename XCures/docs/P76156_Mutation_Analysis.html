@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+<meta name="date" content="2022-01-09" />
+
+<title>P76156_3 Mutations</title>
+
+<script src="site_libs/header-attrs-2.4/header-attrs.js"></script>
+<script src="site_libs/jquery-1.12.4/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/textmate.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.5.2/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.15/datatables.js"></script>
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.10.20/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.10.20/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/crosstalk-1.1.0.1/css/crosstalk.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.1.0.1/js/crosstalk.min.js"></script>
+
+<link rel="icon" href="https://github.com/workflowr/workflowr-assets/raw/master/img/reproducible.png">
+<!-- Add a small amount of space between sections. -->
+<style type="text/css">
+div.section {
+  padding-top: 12px;
+}
+</style>
+
+
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+      </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">SYGNOMICS Patient Report</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="P76156_3_Analysis.html">P76156_3</a>
+</li>
+<li>
+  <a href="P76156_3_Analysis.html">P76156_6</a>
+</li>
+<li>
+  <a href="help.html">Help</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">P76156_3 Mutations</h1>
+<h4 class="date">01/09/2022</h4>
+
+</div>
+
+
+<div id="causal-flow-mutations-mutated-in-patient" class="section level3">
+<h3>Causal flow ** MUTATIONS ** mutated in Patient</h3>
+<p>None of the patient mutations map to <strong>mutations</strong> of causal mechanistic flows in the patients network</p>
+</div>
+<div id="causal-flow-regulators-mutated-in-patient" class="section level3">
+<h3>Causal flow ** REGULATORS ** mutated in Patient</h3>
+<div id="htmlwidget-42d0f9c6ceeaf8645a02" style="width:100%;height:100%;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-42d0f9c6ceeaf8645a02">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10"],["HNF4A","ESR2","ESR2","ESR2","ESR2","ESR2","ESR2","ESR2","ESR2","ESR2"],["DLX4","DLX4","DLX4","DLX4","DLX4","DLX4","DLX4","DLX4","DLX4","DLX4"],["O: 3 U: 0 A: 6","O: 3 U: 0 A: 13","O: 3 U: 0 A: 13","O: 3 U: 0 A: 13","O: 3 U: 0 A: 13","O: 3 U: 0 A: 13","O: 3 U: 0 A: 13","O: 3 U: 0 A: 13","O: 3 U: 0 A: 13","O: 3 U: 0 A: 13"],[0.5,0.230769230769231,0.230769230769231,0.230769230769231,0.230769230769231,0.230769230769231,0.230769230769231,0.230769230769231,0.230769230769231,0.230769230769231],["ALVERINE","ESTRAMUSTINE PHOSPHATE SODIUM","PRINABEREL","AUS-131","ESTRAMUSTINE PHOSPHATE","CHLOROTRIANISENE","RALOXIFENE HYDROCHLORIDE","RALOXIFENE","MF101","ERTEBEREL"],["Serotonin 1a (5-HT1a) receptor antagonist:Hepatocyte nuclear factor 4-alpha activator","DNA inhibitor:Estrogen receptor beta modulator","Estrogen receptor beta agonist","Estrogen receptor beta agonist","DNA inhibitor:Estrogen receptor beta modulator","Estrogen receptor beta modulator","Estrogen receptor beta modulator","Estrogen receptor beta modulator","Estrogen receptor beta agonist","Estrogen receptor beta agonist"],["HNF4A","ESR2","ESR2","ESR2","ESR2","ESR2","ESR2","ESR2","ESR2","ESR2"],[false,false,false,false,false,false,false,false,false,false]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Mutations<\/th>\n      <th>Regulators<\/th>\n      <th>Regulon Activity Summary<\/th>\n      <th>Drug Constrained Regulon Activity<\/th>\n      <th>Drug<\/th>\n      <th>Drug Mechanism<\/th>\n      <th>Target Gene(s)<\/th>\n      <th>MutatedInPatient<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"p","pageLength":5,"columnDefs":[{"className":"dt-right","targets":4},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="cancer-genome-interpreter-mutations-of-patient-mutations" class="section level3">
+<h3>Cancer Genome Interpreter ** MUTATIONS ** of Patient Mutations</h3>
+<div id="htmlwidget-e743035c9dd69fc2086b" style="width:100%;height:100%;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e743035c9dd69fc2086b">{"x":{"filter":"none","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161"],["chr16:20440360 A>C","chr1:246850928 A>G","chr7:100103430 A>C","chr17:38479767 C>T","chr14:32092134 G>A","chr1:201114877 T>G","chr1:1495785 C>T","chr1:114581506-114581507 CG>GA","chr10:58702125 G>T","chr3:9740919 A>C","chr17:413621 G>A","chr17:413642 C>A","chr17:47158287 C>T","chr17:47139867-47139866 >","chr17:47157360 G>C","chr17:47158269 A>C","chr19:1036205 G>T","chr19:1036212 C>T","chr2:188994556 A>G","chr1:152515463 C>T","chr10:124998005 G>T","chr10:124993303 G>C","chr10:124993255 G>A","chr10:124993235 C>T","chr10:124993220 T>G","chr5:13769583 G>T","chr4:87615936 A>G","chr4:87616026 A>G","chr4:87616035 G>A","chr14:23359450 C>G","chr3:184143129 A>G","chr7:37342678 C>T","chr8:23447710 G>A","chr1:204140071 C>T","chr22:45328017 G>A","chr6:17602632 C>T","chr6:17605931 C>T","chr6:17605974 G>A","chr6:17602595 G>T","chr6:17602664 A>G","chr6:17605987 T>G","chr6:17602608 C>T","chr6:17605953 C>T","chr6:17602679 G>A","chr6:17605938 T>A","chrX:107603251 C>T","chr17:81811084 C>T","chr2:27508027 A>C","chr9:77922196 T>A","chr15:23439954 C>G","chr15:23440796 C>T","chr12:42087869 A>G","chr12:42087868 C>T","chr12:42106015 A>T","chr12:42087886 T>A","chr15:63663184 G>A","chr6:32666557 A>G","chr6:32666523 G>C","chr6:32666529 A>T","chr6:32584363 T>A","chr6:32584360 G>A","chr6:32581806 T>C","chr6:32581805 G>T","chr1:201209937 G>A","chr1:201209856 G>A","chr1:201210576 T>G","chr1:116616235 C>T","chr7:50376541 G>A","chr5:1880136 G>A","chrX:54757445 G>T","chr19:54855669 G>A","chr19:54855667 A>G","chr7:152265049 G>T","chr12:52949321 C>T","chr21:30371947 G>T","chr17:41054913 T>C","chr17:41054923 T>G","chr17:41149508 C>T","chr17:41149523 T>C","chr17:41149521 T>G","chr17:41105441 A>T","chr11:71527593 A>G","chr11:71538075 C>G","chr19:501801 A>C","chr19:501690 C>A","chr19:500147 C>A","chr19:500152 T>C","chrX:141906299 C>G","chr1:3499710 G>A","chr17:62671733 G>A","chr19:8957779 C>T","chr3:195785074 G>A","chr3:195784642 G>A","chr3:195784628 C>T","chr3:195781628 C>T","chr3:195780706 G>A","chr3:195779218 G>A","chr3:195778916 C>T","chr3:195781199 C>T","chr3:195781198 T>C","chr3:195784663 T>G","chr3:195784631 G>C","chr3:195781790 A>G","chr3:195781237 G>A","chr3:195781244 T>G","chr3:195788146 A>G","chr3:195781378 A>G","chr3:195780994 A>G","chr11:1018263 T>C","chr11:1018452 A>G","chr11:1017273 A>G","chr11:1018407 G>T","chr11:1016662 G>A","chr11:1017417 G>A","chr11:1017036 G>A","chr11:1016628 G>A","chr11:1018462 C>T","chr11:1017519 A>G","chr17:10448639 G>A","chr2:231458380 G>A","chr20:25496679 T>G","chr16:14852521 G>A","chr6:117694169 C>G","chr1:228371608 G>A","chr9:122724738 T>C","chr1:158755555 G>A","chr8:100717782 T>C","chr13:25097562 T>C","chr5:168561428 T>A","chr18:10689746 G>A","chr19:4511167-4511168 GC>CT","chr2:131263620 C>T","chr14:18985420 T>C","chr3:12392713 C>T","chr2:135168644 C>T","chr2:108749114 A>G","chr12:56581405 C>G","chr19:55763137 T>G","chr15:89486947 C>T","chr4:153723390 G>A","chr8:10609234 G>A","chr3:38763553 G>A","chr1:161314642-161314641 >","chr4:166754564 T>C","chr17:76627218 G>A","chr2:94876587 C>A","chr1:117623022 G>A","chr2:137405678 G>A","chr8:23116802 A>C","chr3:14065011-14065010 >","chr3:14065010-14065009 >","chr3:14065007-14065006 >","chr3:14063409-14063408 >","chr2:178734334 G>A","chr8:48043093 T>A","chr15:50492819 A>G","chr1:42700959 G>A","chr18:76928001 C>G","chr7:64078268 T>G","chr19:22315947 G>A","chr19:56088384 C>T"],["16","1","7","17","14","1","1","1","10","3","17","17","17","17","17","17","19","19","2","1","10","10","10","10","10","5","4","4","4","14","3","7","8","1","22","6","6","6","6","6","6","6","6","6","6","X","17","2","9","15","15","12","12","12","12","15","6","6","6","6","6","6","6","1","1","1","1","7","5","X","19","19","7","12","21","17","17","17","17","17","17","11","11","19","19","19","19","X","1","17","19","3","3","3","3","3","3","3","3","3","3","3","3","3","3","3","3","3","11","11","11","11","11","11","11","11","11","11","17","2","20","16","6","1","9","1","8","13","5","18","19","2","14","3","2","2","12","19","15","4","8","3","1","4","17","2","1","2","8","3","3","3","3","2","8","15","1","18","7","19","19"],["SNV","SNV","SNV","SNV","SNV","SNV","SNV","MNV","SNV","SNV","SNV","SNV","SNV","MNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","MNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","MNV","SNV","SNV","SNV","SNV","SNV","SNV","MNV","MNV","MNV","MNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV","SNV"],["ACSM5","AHCTF1","AP4M1","ARHGAP23","ARHGAP5","ASCL5","ATAD3B","BCAS2","BICC1","BRPF1","C17orf97","C17orf97","CDC27","CDC27","CDC27","CDC27","CNN2","CNN2","COL3A1","CRCT1","CTBP2","CTBP2","CTBP2","CTBP2","CTBP2","DNAH5","DSPP","DSPP","DSPP","EFS","EIF2B5","ELMO1","ENTPD4","ETNK2","FAM118A","FAM8A1","FAM8A1","FAM8A1","FAM8A1","FAM8A1","FAM8A1","FAM8A1","FAM8A1","FAM8A1","FAM8A1","FRMPD3","GCGR","GCKR","GNAQ","GOLGA6L2","GOLGA6L2","GXYLT1","GXYLT1","GXYLT1","GXYLT1","HERC1","HLA-DQB1","HLA-DQB1","HLA-DQB1","HLA-DRB1","HLA-DRB1","HLA-DRB1","HLA-DRB1","IGFN1","IGFN1","IGFN1","IGSF3","IKZF1","IRX4","ITIH6","KIR3DL2","KIR3DL2","KMT2C","KRT18","KRTAP13-2","KRTAP2-2","KRTAP2-2","KRTAP4-5","KRTAP4-5","KRTAP4-5","KRTAP4-9","KRTAP5-7","KRTAP5-8","MADCAM1","MADCAM1","MADCAM1","MADCAM1","MAGEC1","MEGF6","MRC2","MUC16","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC4","MUC6","MUC6","MUC6","MUC6","MUC6","MUC6","MUC6","MUC6","MUC6","MUC6","MYH4","NCL","NINL","NOMO1","NUS1","OBSCN","OR1L4","OR6K6","PABPC1","PABPC3","PANK3","PIEZO2","PLIN4","POTEE","POTEM","PPARG","RAB3GAP1","RANBP2","RBMS2","RFPL4A","RHCG","RNF175","RP1L1","SCN10A","SDHC","SPOCK3","ST6GALNAC1","TEKT4","TENT5C","THSD7B","TNFRSF10C","TPRXL","TPRXL","TPRXL","TPRXL","TTN","UBE2V2","USP8","YBX1","ZNF236","ZNF727","ZNF729","ZNF787"],["E558A","I1728T","T132P","P838L","E489K","T166P","P639S","R29S","G97*","Q565P","E260K","P267T","A132T","--","T167R","Y138D","D177Y","T179I","N437D","P27L","A715E","A853G","A869V","A876T","I881L","A3213D","N1092D","N1122D","D1125N","R343P","I586V","A5T","R128*","A278T","R159Q","A252V","R339*","R353Q","E240*","I263V","I357M","P244L","S346L","V268I","V341E","Q1771*","R116C","N431H","T96S","A841P","G560E","C414R","C414Y","L223I","K408I","Q2901*","T17","L29V","S27T","Q39L","P40L","T135A","T135N","E1682K","G1655S","W1895G","R89H","V57I","R139W","P877T","A236T","Q235R","C391*","R50C","C89*","Q100R","T97P","R87K","Q82R","T83P","D18V","Y98C","S7C","K291T","P254Q","P246Q","S248P","P299A","P948L","R401H","A6331T","A2169V","A2313V","A2318T","A3318T","A3625V","A4121V","A4222T","D3461N","D3461G","H2306P","H2317D","S3264P","S3448L","T3446P","V1145A","V3401A","V3529A","H1513R","F1450S","F1843S","P1465H","P2047S","T1795I","T1922I","T2058I","V1447I","V1761A","R1504*","A392V","T432P","S225N","A227G","E7901K","V250A","R247Q","D165G","V455A","I301F","T2469M","V932M","A722V","L379S","R194W","R944W","T420A","S210C","S276A","G75S","A157V","R1622W","R215W","--","Y295C","R341C","L376I","V52I","G856S","N184T","--","--","--","--","L5164F","V26E","T785A","D357N","L1497V","C407G","V844I","G263E"],["passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","non-protein affecting","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","non-protein affecting","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","predicted","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","non-protein affecting","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","non-protein affecting","non-protein affecting","non-protein affecting","non-protein affecting","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)","passenger (oncodriveMUT)"],["missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","stop_gained","missense_variant","missense_variant","missense_variant","missense_variant","intron_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","stop_gained","missense_variant","missense_variant","missense_variant","stop_gained","missense_variant","stop_gained","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","stop_gained","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","stop_gained","synonymous_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","stop_gained","missense_variant","stop_gained","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","stop_gained","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","intron_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","non_coding_transcript_exon_variant","non_coding_transcript_exon_variant","non_coding_transcript_exon_variant","non_coding_transcript_exon_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant","missense_variant"],["NO","NO","NO","NO","OTHER","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","OTHER","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","OTHER","NO","NO","NO","NO","OTHER","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","OTHER","NO","NO","NO","NO","NO","NO","NO","NO","OTHER","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","NO","OTHER","NO","NO","NO","NO","NO"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>MUTATION<\/th>\n      <th>CHR<\/th>\n      <th>TYPE<\/th>\n      <th>SYMBOL<\/th>\n      <th>PROTEIN_CHANGE<\/th>\n      <th>ONCOGENIC_CLASSIFICATION<\/th>\n      <th>CONSEQUENCE<\/th>\n      <th>IS_CANCER_GENE<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"dom":"p","pageLength":5,"order":[],"autoWidth":false,"orderClasses":false,"columnDefs":[{"orderable":false,"targets":0}],"lengthMenu":[5,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+<div id="cancer-genome-interpreter-prescriptions-of-patient-mutations" class="section level3">
+<h3>Cancer Genome Interpreter ** PRESCRIPTIONS ** of Patient Mutations</h3>
+<p>None of the patient mutations map Cancer Genome Interperater <strong>Prescriptions</strong>.</p>
+<br>
+<p>
+<button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
+<span class="glyphicon glyphicon-wrench" aria-hidden="true"></span> Session information
+</button>
+</p>
+<div id="workflowr-sessioninfo" class="collapse">
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>R version 4.0.2 (2020-06-22)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Catalina 10.15.7
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
+LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
+
+locale:
+[1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] DT_0.15         forcats_0.5.0   stringr_1.4.0   dplyr_1.0.7     purrr_0.3.4     readr_1.4.0     tidyr_1.1.2     tibble_3.0.4    ggplot2_3.3.2   tidyverse_1.3.0
+
+loaded via a namespace (and not attached):
+ [1] tidyselect_1.1.0  xfun_0.24         haven_2.3.1       colorspace_2.0-0  vctrs_0.3.8       generics_0.0.2    htmltools_0.5.1.1 yaml_2.2.1        utf8_1.1.4        blob_1.2.1        rlang_0.4.11      later_1.1.0.1     pillar_1.6.2      withr_2.3.0       glue_1.4.2        DBI_1.1.0         dbplyr_1.4.4      readxl_1.3.1      modelr_0.1.8      lifecycle_1.0.0   cellranger_1.1.0  munsell_0.5.0     gtable_0.3.0      workflowr_1.6.2   rvest_0.3.6       htmlwidgets_1.5.2 evaluate_0.14     knitr_1.30        crosstalk_1.1.0.1 httpuv_1.5.4      fansi_0.4.1       broom_0.7.1       Rcpp_1.0.7        promises_1.1.1    backports_1.1.10  scales_1.1.1      jsonlite_1.7.2    fs_1.5.0          hms_0.5.3         digest_0.6.27     stringi_1.5.3     rprojroot_2.0.2   grid_4.0.2        cli_2.2.0         tools_4.0.2       magrittr_2.0.1    crayon_1.3.4      pkgconfig_2.0.3   ellipsis_0.3.2    xml2_1.3.2        reprex_0.3.0      lubridate_1.7.9   assertthat_0.2.1  rmarkdown_2.4     httr_1.4.2        rstudioapi_0.13   R6_2.5.0          git2r_0.27.1      compiler_4.0.2   </code></pre>
+</div>
+</div>
+
+
+<!-- Adjust MathJax settings so that all math formulae are shown using
+TeX fonts only; see
+http://docs.mathjax.org/en/latest/configuration.html.  This will make
+the presentation more consistent at the cost of the webpage sometimes
+taking slightly longer to load. Note that this only works because the
+footer is added to webpages before the MathJax javascript. -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": { availableFonts: ["TeX"] }
+  });
+</script>
+
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

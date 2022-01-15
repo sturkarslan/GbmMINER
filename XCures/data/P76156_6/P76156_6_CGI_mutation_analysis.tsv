@@ -1,0 +1,135 @@
+MUTATION	START	POS_HG19	END	CHR	ALT	REF	STRAND	INFO	TYPE	SYMBOL	TRANSCRIPT	PROTEIN_CHANGE	BOOSTDM_DS	BOOSTDM_SCORE	ONCOGENIC_CLASSIFICATION	SOURCE	CONSEQUENCE	IS_CANCER_GENE	CONSENSUS_ROLE
+chr16:20440360 A>C	20440360	20451682	20440360	16	C	A	+		SNV	ACSM5	ENST00000331849	E558A	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:246850928 A>G	246850928	247014230	246850928	1	G	A	+		SNV	AHCTF1	ENST00000366508	I1728T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr13:63746867 G>A	63746867	64321000	63746867	13	A	G	+		SNV	AL445989.1	ENST00000611641	G23S	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr13:63746877 A>G	63746877	64321010	63746877	13	G	A	+		SNV	AL445989.1	ENST00000611641	Y26C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr2:97154694 C>A	97154694	97820431	97154694	2	A	C	+		SNV	ANKRD36	ENST00000652721	R405S	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr2:97164440 G>T	97164440	97830177	97164440	2	T	G	+		SNV	ANKRD36	ENST00000652721	G501V	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr7:100103430 A>C	100103430	99701053	100103430	7	C	A	+		SNV	AP4M1	ENST00000429084	T132P	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:1465417 G>A	1465417	1465416	1465417	19	A	G	+		SNV	APC2	ENST00000535453	A706T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr17:38479767 C>T	38479767	36636008	38479767	17	T	C	+		SNV	ARHGAP23	ENST00000622683	P838L	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr14:32092134 G>A	32092134	32561340	32092134	14	A	G	+		SNV	ARHGAP5	ENST00000345122	E489K	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	OTHER	
+chr14:104093589 C>T	104093589	104559926	104093589	14	T	C	+		SNV	ASPG	ENST00000551177	A97V	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:57232197 G>A	57232197	57743565	57232197	19	A	G	+		SNV	AURKC	ENST00000302804	R90Q	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chrX:40072519 C>A	40072519	39931772	40072519	X	A	C	+		SNV	BCOR	ENST00000378444	G943*	driver (oncodriveMUT)		predicted		stop_gained	OTHER	
+chr10:42820356 T>A	42820356	43315804	42820356	10	A	T	+		SNV	BMS1	ENST00000374518	F901I	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr7:143303897 C>T	143303897	143000990	143303897	7	T	C	+		SNV	CASP2	ENST00000310447	R361C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr22:46536332 A>C	46536332	46932229	46536332	22	C	A	+		SNV	CELSR1	ENST00000674500	V280G	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:7765914 G>A	7765914	7830800	7765914	19	A	G	+		SNV	CLEC4M	ENST00000327325	R164Q	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr10:124994641 C>T	124994641	126683210	124994641	10	T	C	+		SNV	CTBP2	ENST00000309035	G743E	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr9:103005583 G>A	103005583	105767865	103005583	9	A	G	+		SNV	CYLC2	ENST00000374798	D318N	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:46815222-46815223 AG>CA	46815222	47280894	46815223	1	CA	AG	+		MNV	CYP4B1	ENST00000371923	E344A	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr12:45050776 G>T	45050776	45444559	45050776	12	T	G	+		SNV	DBX2	ENST00000332700	T51K	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr6:24205064 T>C	24205064	24205292	24205064	6	C	T	+		SNV	DCDC2	ENST00000378454	T321A	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr21:46459219 G>A	46459219	47879132	46459219	21	A	G	+		SNV	DIP2A	ENST00000651436	E30K	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr5:13769583 G>T	13769583	13769692	13769583	5	T	G	+		SNV	DNAH5	ENST00000265104	A3213D	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr11:640174 A>G	640174	640174	640174	11	G	A	+		SNV	DRD4	ENST00000176183	N309D	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr11:640171 T>C	640171	640171	640171	11	C	T	+		SNV	DRD4	ENST00000176183	S308P	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:184143129 A>G	184143129	183860917	184143129	3	G	A	+		SNV	EIF2B5	ENST00000647909	I586V	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr7:37342678 C>T	37342678	37382282	37342678	7	T	C	+		SNV	ELMO1	ENST00000310758	A5T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr8:23447710 G>A	23447710	23305223	23447710	8	A	G	+		SNV	ENTPD4	ENST00000358689	R128*	passenger (oncodriveMUT)		passenger (oncodriveMUT)		stop_gained	NO	
+chr3:45005307 G>C	45005307	45046799	45005307	3	C	G	+		SNV	EXOSC7	ENST00000265564	V170L	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:16062147 G>A	16062147	16388642	16062147	1	A	G	+		SNV	FAM131C	ENST00000375662	R74C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chrX:34130760 C>G	34130760	34148877	34130760	X	G	C	+		SNV	FAM47A	ENST00000346193	E507Q	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr6:17604949 G>A	17604949	17605180	17604949	6	A	G	+		SNV	FAM8A1	ENST00000259963	D293N	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr6:17604935 T>C	17604935	17605166	17604935	6	C	T	+		SNV	FAM8A1	ENST00000259963	I288T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr6:17604948 A>G	17604948	17605179	17604948	6	G	A	+		SNV	FAM8A1	ENST00000259963	I292M	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr10:133625575 A>T	133625575	135439079	133625575	10	T	A	+		SNV	FRG2B	ENST00000443774	S122T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr4:48550634 G>A	48550634	48552651	48550634	4	A	G	+		SNV	FRYL	ENST00000358350	R1531*	passenger (oncodriveMUT)		passenger (oncodriveMUT)		stop_gained	NO	
+chr17:81811084 C>T	81811084	79768960	81811084	17	T	C	+		SNV	GCGR	ENST00000570996	R116C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr15:23440059 C>G	23440059	23685206	23440059	15	G	C	+		SNV	GOLGA6L2	ENST00000567107	A806P	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr15:23439891 C>G	23439891	23685038	23439891	15	G	C	+		SNV	GOLGA6L2	ENST00000567107	A862P	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr15:84240682 G>A	84240682	84909434	84240682	15	A	G	+		SNV	GOLGA6L4	ENST00000510439	R443Q	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr15:63663184 G>A	63663184	63955383	63663184	15	A	G	+		SNV	HERC1	ENST00000443617	Q2901*	passenger (oncodriveMUT)		passenger (oncodriveMUT)		stop_gained	NO	
+chr6:32521980 C>G	32521980	32489757	32521980	6	G	C	+		SNV	HLA-DRB5	ENST00000374975	D99H	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:201209856 G>A	201209856	201178984	201209856	1	A	G	+		SNV	IGFN1	ENST00000335211	G1655S	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:201209877 A>G	201209877	201179005	201209877	1	G	A	+		SNV	IGFN1	ENST00000335211	S1662G	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr7:50376541 G>A	50376541	50444239	50376541	7	A	G	+		SNV	IKZF1	ENST00000331340	V57I	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	OTHER	
+chr5:1880136 G>A	1880136	1880250	1880136	5	A	G	+		SNV	IRX4	ENST00000613726	R139W	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:17838373 C>T	17838373	17949182	17838373	19	T	C	+		SNV	JAK3	ENST00000458235	V487M	driver (oncodriveMUT)		predicted		missense_variant	OTHER	
+chr6:39596176 G>A	39596176	39563952	39596176	6	A	G	+		SNV	KIF6	ENST00000287152	R242*	passenger (oncodriveMUT)		passenger (oncodriveMUT)		stop_gained	NO	
+chr22:50547931 T>C	50547931	50986360	50547931	22	C	T	+		SNV	KLHDC7B	ENST00000648057	L563P					missense_variant	NO	
+chr12:49030394 T>G	49030394	49424177	49030394	12	G	T	+		SNV	KMT2D	ENST00000301067	T4629P	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	YES	LoF
+chr12:123389453 C>T	123389453	123874000	123389453	12	T	C	+		SNV	KMT5A	ENST00000402868	R11C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr12:123404939 G>C	123404939	123889486	123404939	12	C	G	+		SNV	KMT5A	ENST00000402868	R238P	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr12:123404945 A>C	123404945	123889492	123404945	12	C	A	+		SNV	KMT5A	ENST00000402868	D240A	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr12:52904891 A>C	52904891	53298675	52904891	12	C	A	+		SNV	KRT8	ENST00000552150	S59A	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr21:44539675 T>G	44539675	45959558	44539675	21	G	T	+		SNV	KRTAP10-1	ENST00000400375	D159A	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr21:44539676 C>A	44539676	45959559	44539676	21	A	C	+		SNV	KRTAP10-1	ENST00000400375	D159Y	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr21:30371947 G>T	30371947	31744265	30371947	21	T	G	+		SNV	KRTAP13-2	ENST00000399889	C89*	passenger (oncodriveMUT)		passenger (oncodriveMUT)		stop_gained	NO	
+chr12:117761327 C>T	117761327	118199132	117761327	12	T	C	+		SNV	KSR2	ENST00000339824	V224M	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:11120140 A>C	11120140	11230816	11120140	19	C	A	+		SNV	LDLR	ENST00000557933	N632H	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr14:23104904 A>G	23104904	23574113	23104904	14	G	A	+		SNV	LMLN2	ENST00000637218	L6P					missense_variant	NO	
+chr1:3499710 G>A	3499710	3416274	3499710	1	A	G	+		SNV	MEGF6	ENST00000356575	P948L	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr12:131828565 C>T	131828565	132313110	131828565	12	T	C	+		SNV	MMP17	ENST00000360564	P24L	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr17:62671733 G>A	62671733	60749094	62671733	17	A	G	+		SNV	MRC2	ENST00000303375	R401H	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:8957779 C>T	8957779	9068455	8957779	19	T	C	+		SNV	MUC16	ENST00000397910	A6331T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:155191942 G>C	155191942	155161733	155191942	1	C	G	+		SNV	MUC1	ENST00000611571	P134A	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:195784642 G>A	195784642	195511513	195784642	3	A	G	+		SNV	MUC4	ENST00000463781	A2313V	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:195784628 C>T	195784628	195511499	195784628	3	T	C	+		SNV	MUC4	ENST00000463781	A2318T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:195778868 C>T	195778868	195505739	195778868	3	T	C	+		SNV	MUC4	ENST00000463781	A4238T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:195784663 T>G	195784663	195511534	195784663	3	G	T	+		SNV	MUC4	ENST00000463781	H2306P	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:195784631 G>C	195784631	195511502	195784631	3	C	G	+		SNV	MUC4	ENST00000463781	H2317D	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:195784519 T>A	195784519	195511390	195784519	3	A	T	+		SNV	MUC4	ENST00000463781	H2354L	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:195780047 T>C	195780047	195506918	195780047	3	C	T	+		SNV	MUC4	ENST00000463781	I3845V	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:195786955 G>A	195786955	195513826	195786955	3	A	G	+		SNV	MUC4	ENST00000463781	P1542L	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:195779038 C>G	195779038	195505909	195779038	3	G	C	+		SNV	MUC4	ENST00000463781	S4181T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr11:1017376 T>A	1017376	1017376	1017376	11	A	T	+		SNV	MUC6	ENST00000421673	I1809F	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr11:1017152 G>C	1017152	1017152	1017152	11	C	G	+		SNV	MUC6	ENST00000421673	I1883M	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr11:1017700 T>C	1017700	1017700	1017700	11	C	T	+		SNV	MUC6	ENST00000421673	T1701A	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr17:10448639 G>A	10448639	10351956	10448639	17	A	G	+		SNV	MYH4	ENST00000255381	R1504*	passenger (oncodriveMUT)		passenger (oncodriveMUT)		stop_gained	NO	
+chr1:24058944 C>A	24058944	24385434	24058944	1	A	C	+		SNV	MYOM3	ENST00000374434	A1344S	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr3:175803100 T>G	175803100	175520888	175803100	3	G	T	+		SNV	NAALADL2	ENST00000454872	L762R	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr2:151562148 T>A	151562148	152418662	151562148	2	A	T	+		SNV	NEB	ENST00000618972	I6320F	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr16:15363819 A>G	15363819	15457676	15363819	16	G	A	+		SNV	NPIPA5	ENST00000360151	L298P	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:158755555 G>A	158755555	158725345	158755555	1	A	G	+		SNV	OR6K6	ENST00000368144	R247Q	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr8:100715488 C>T	100715488	101727716	100715488	8	T	C	+		SNV	PABPC1	ENST00000523555	R206H	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	OTHER	
+chr8:100705051 G>A	100705051	101717279	100705051	8	A	G	+		SNV	PABPC1	ENST00000523555	R565W	driver (oncodriveMUT)		predicted		missense_variant	OTHER	
+chr8:100715486 G>A	100715486	101727714	100715486	8	A	G	+		SNV	PABPC1	ENST00000523555	L207F	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	OTHER	
+chr13:24447063 G>A	24447063	25021201	24447063	13	A	G	+		SNV	PARP4	ENST00000381989	L1080F	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	OTHER	
+chr5:140966926 C>A	140966926	140346511	140966926	5	A	C	+		SNV	PCDHAC2	ENST00000289269	P54T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:153307222 A>T	153307222	153279698	153307222	1	T	A	+		SNV	PGLYRP3	ENST00000290722	L34H	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr18:10689746 G>A	10689746	10689744	10689746	18	A	G	+		SNV	PIEZO2	ENST00000674853	T2469M	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:4511167-4511168 GC>CT	4511167	4511179	4511168	19	CT	GC	+		MNV	PLIN4	ENST00000633942	V932M					missense_variant	NO	
+chr2:131263620 C>T	131263620	132021193	131263620	2	T	C	+		SNV	POTEE	ENST00000356920	A722V	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr12:11353840 C>T	11353840	11506774	11353840	12	T	C	+		SNV	PRB1	ENST00000546254	R88Q	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr12:11308636 G>T	11308636	11461570	11308636	12	T	G	+		SNV	PRB4	ENST00000279575	P116H	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr2:108749114 A>G	108749114	109365570	108749114	2	G	A	+		SNV	RANBP2	ENST00000283195	T420A	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	YES	LoF
+chr12:56581405 C>G	56581405	56975189	56581405	12	G	C	+		SNV	RBMS2	ENST00000262031	S210C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr15:89486947 C>T	89486947	90030178	89486947	15	T	C	+		SNV	RHCG	ENST00000268122	G75S	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr4:153723390 G>A	153723390	154644542	153723390	4	A	G	+		SNV	RNF175	ENST00000347063	A157V	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr8:10609234 G>A	10609234	10466744	10609234	8	A	G	+		SNV	RP1L1	ENST00000382483	R1622W	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr17:39202359 G>C	39202359	37358612	39202359	17	C	G	+		SNV	RPL19	ENST00000678573	R72P	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr20:17659295 C>T	17659295	17639940	17659295	20	T	C	+		SNV	RRBP1	ENST00000377813	A405T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr20:17614006-17614005 >	17614006	17594651	17614005	20			+		MNV	RRBP1	ENST00000377813	--	non-protein affecting		non-protein affecting		3_prime_UTR_variant	NO	
+chr17:28381582 G>T	28381582	26708601	28381582	17	T	G	+		SNV	SARM1	ENST00000585482	E284*	passenger (oncodriveMUT)		passenger (oncodriveMUT)		stop_gained	NO	
+chr17:28388382 T>G	28388382	26715401	28388382	17	G	T	+		SNV	SARM1	ENST00000585482	F589C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr5:176238519 T>A	176238519	175665522	176238519	5	A	T	+		SNV	SIMC1	ENST00000429602	F4Y	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr4:166754564 T>C	166754564	167675715	166754564	4	C	T	+		SNV	SPOCK3	ENST00000357154	Y295C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr17:76627218 G>A	76627218	74623300	76627218	17	A	G	+		SNV	ST6GALNAC1	ENST00000156626	R341C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:149913452 T>G	149913452	149885004	149913452	1	G	T	+		SNV	SV2A	ENST00000369146	E130A	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr12:11092003 T>C	11092003	11244602	11092003	12	C	T	+		SNV	TAS2R43	ENST00000531678	N76S	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:117623022 G>A	117623022	118165644	117623022	1	A	G	+		SNV	TENT5C	ENST00000369448	V52I	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr2:137405678 G>A	137405678	138163248	137405678	2	A	G	+		SNV	THSD7B	ENST00000272643	G856S	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr4:163473529 T>G	163473529	164394681	163473529	4	G	T	+		SNV	TKTL2	ENST00000280605	N69T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr11:117918630 G>C	117918630	117789345	117918630	11	C	G	+		SNV	TMPRSS13	ENST00000445164	A77G	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr11:117918627 T>C	117918627	117789342	117918627	11	C	T	+		SNV	TMPRSS13	ENST00000445164	Q78R	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr8:23116802 A>C	23116802	22974315	23116802	8	C	A	+		SNV	TNFRSF10C	ENST00000356864	N184T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr17:7669655 C>T	7669655	7572973	7669655	17	T	C	+		SNV	TP53	ENST00000269305	R379H	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	YES	LoF
+chr16:1257059 A>G	1257059	1307060	1257059	16	G	A	+		SNV	TPSD1	ENST00000211076	N173D	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr13:19424954 T>C	19424954	19999094	19424954	13	C	T	+		SNV	TPTE2	ENST00000400230	N487D	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr1:54800875 G>A	54800875	55266548	54800875	1	A	G	+		SNV	TTC22	ENST00000371276	P97S	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr2:178734334 G>A	178734334	179599061	178734334	2	A	G	+		SNV	TTN	ENST00000589042	L5164F	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr18:47898 C>T	47898	47898	47898	18	T	C	+		SNV	TUBB8B	ENST00000308911	R276Q	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr8:48043093 T>A	48043093	48955653	48043093	8	A	T	+		SNV	UBE2V2	ENST00000523111	V26E	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr15:43037874 G>T	43037874	43330072	43037874	15	T	G	+		SNV	UBR1	ENST00000290650	Q641K	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr7:49775578 G>A	49775578	49815174	49775578	7	A	G	+		SNV	VWC2	ENST00000340652	R48H	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr12:883435 T>G	883435	992601	883435	12	G	T	+		SNV	WNK1	ENST00000530271	F1590C	driver (oncodriveMUT)		predicted		missense_variant	NO	
+chr12:71638443 G>C	71638443	72032223	71638443	12	C	G	+		SNV	ZFC3H1	ENST00000378743	S567C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr18:76928001 C>G	76928001	74639957	76928001	18	G	C	+		SNV	ZNF236	ENST00000320610	L1497V	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr8:144807803 A>G	144807803	146033188	144807803	8	G	A	+		SNV	ZNF517	ENST00000359971	K296R	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr7:64078268 T>G	64078268	63538646	64078268	7	G	T	+		SNV	ZNF727	ENST00000456806	C407G	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:23145918 G>A	23145918	23328720	23145918	19	A	G	+		SNV	ZNF730	ENST00000597761	A292T	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:56088384 C>T	56088384	56599753	56088384	19	T	C	+		SNV	ZNF787	ENST00000610935	G263E	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:22392768 T>C	22392768	22575570	22392768	19	C	T	+		SNV	ZNF98	ENST00000357774	Y156C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
+chr19:22392975 T>C	22392975	22575777	22392975	19	C	T	+		SNV	ZNF98	ENST00000357774	Y87C	passenger (oncodriveMUT)		passenger (oncodriveMUT)		missense_variant	NO	
