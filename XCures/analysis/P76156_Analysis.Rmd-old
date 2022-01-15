@@ -1,0 +1,277 @@
+---
+title: "P76156 Patient Report"
+author: "SYGNOMICS"
+date: "12/04/2021"
+output:
+  html_document:
+    df_print: paged
+  always_allow_html: yes
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+  options(width = 1200)
+
+```
+
+```{r libraries, echo=FALSE, message=FALSE,warning=FALSE}
+library(tidyverse)
+library(DT)
+source("code/patient_plots.R")
+source("code/format_target_data.R")
+library(grid)
+library(gridExtra)
+#library(icons)
+```
+
+```{r load data, echo=FALSE, message=FALSE,warning=FALSE}
+# Load patient data
+patient_id = 'P76156_3'
+filename <- paste("output/",patient_id, "/", patient_id, "_drug_therapy_activity.csv",sep="")
+        network_info <-
+            read_csv(
+                filename,
+            )
+        network_info <- network_info %>%
+          filter(`Drug Constrained Regulon Activity` > 0.8)
+
+```
+
+```{r load_patient_exp, echo=FALSE, message=FALSE,warning=FALSE}
+patient_exp_filename <- paste0("/Volumes/omics4tb2/SYGNAL/XCures/P76156/",patient_id, "/RNA/results_RSEM/", patient_id, ".genes.results", sep="")
+patient_exp <- read.delim(patient_exp_filename, sep="\t") %>%
+  separate(gene_id, into = c("Gene_ID", "Gene_Symbol"), sep = "_") %>%
+  dplyr::select(Gene_ID, Gene_Symbol, TPM) %>%
+  filter(Gene_ID %in% cohort_genes) %>%
+  mutate(zscore = (TPM - mean(TPM))/sd(TPM))
+
+```
+
+
+```{r soc_drugs, echo=FALSE, message=FALSE,warning=FALSE}
+soc_drugs <- c("TEMOZOLOMIDE","CARMUSTINE","BEVACIZUMAB","LOMUSTINE", "NIMUSTINE","FOTEMUSTINE")
+
+
+```
+
+
+
+```{r patient meta, results='asis', echo=FALSE, message=FALSE,warning=FALSE}
+        tmp6 <- tibble(`Patient ID` = patient_id,
+                  `Age` = "",
+                  `Sex` = "",
+                  `MGMT Methylation` = "Methylated",
+                  `ExomeSeq` = paste("Yes"),
+                  `RNASeq` = paste("Yes"),
+                  `CNV` = paste("Yes"),
+                  `Profiling Type` = "Unknown"
+                  )
+     datatable(tmp6, options = list(dom=''))
+
+
+```
+
+# SOC Drugs
+```{r soc_drug_summary, results='asis', echo=F, warning=F, message=F}
+count = 0
+network_info_soc <- network_info %>%
+  filter(Drug %in% soc_drugs)
+
+for(target in unique(network_info_soc$`Target Gene(s)`)){
+  count = count + 1
+ format_target_data(target, count=count)
+}
+
+# for(soc.drug in soc_drugs){
+#    count = 0
+#   if(soc.drug %in% network_info$Drug){
+#     # filter network for soc drugs
+#     network_info_soc <- network_info %>%
+#       filter(Drug == soc.drug)
+#     
+#     # get targets for soc drugs
+#     targets_soc <- network_info_soc %>%
+#       pull(`Target Gene(s)`) %>%
+#       unique()
+#     
+#    
+#     for(target_soc in targets_soc){
+#       count = count + 1
+#       format_target_data(target_soc, count=count)
+#     }
+#   } else {
+#     cat("No information was found in the network for", soc.drug, "!\n")
+#   }
+# }
+
+```
+
+# Drugs in GBM Trials
+```{r drugs_gbmtrial, results='asis', echo=F, warning=F, message=F}
+count = 0
+network_info_gbmtrials <- network_info %>%
+  filter(!is.na(max_glioblastoma.multiforme_phase)) %>%
+  filter(!(Drug %in% soc_drugs))
+  
+for(target in unique(network_info_gbmtrials$`Target Gene(s)`)){
+  count = count + 1
+ format_target_data(target, count=count)
+}
+
+```
+
+# FDA Approved Drugs
+```{r fda_approved, results='asis', echo=F, warning=F, message=F}
+count = 0
+network_info_fda <- network_info %>%
+  filter(`Other FDA Appr.` == TRUE) %>%
+  filter(is.na(max_glioblastoma.multiforme_phase)) %>%
+  filter(!(Drug %in% soc_drugs))
+ 
+  
+for(target in unique(network_info_fda$`Target Gene(s)`)){
+  count = count + 1
+ format_target_data(target, count=count)
+}
+
+```
+
+<!-- ### Drug Report Summary based on Patient's Mutations -->
+<!-- ```{r mutation drug summary, results='asis', echo=F, warning=F, message=F} -->
+
+<!-- drugs <- network_info %>% -->
+<!--   filter(TL1961DB85RegulonActivity == 1 & Miner_Target_Type == 'MutationGene') %>% -->
+<!--   select(Drug, MutationSymbol, TargetSymbol, RegulatorID, Regulon_ID,RegulatorSymbol, RMST_diff_UnderActiveMinusOverActiveMGMTMeth, DrugTrialPhaseGBM,IfAntiCancerPhaseIV, MutationRegulatorEdge) %>% -->
+<!--   unique() -->
+
+<!-- for(mutation in unique(drugs$MutationSymbol)){ -->
+<!--   cat(sep="","1. Mutation: **", mutation, "**  \n") -->
+
+<!--   target.drugs <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(Drug) %>% -->
+<!--     unique() -->
+
+<!--   target.regulators <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(RegulatorSymbol) %>% -->
+<!--     unique() -->
+
+
+<!--   target.regulons <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(Regulon_ID) %>% -->
+<!--     unique() -->
+
+<!--   target.list <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(TargetSymbol) %>% -->
+<!--     unique() -->
+
+<!--   rmsts <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(RMST_diff_UnderActiveMinusOverActiveMGMTMeth) -->
+
+<!--   gbmtrials <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     pull(DrugTrialPhaseGBM) %>% -->
+<!--     unique() -->
+
+<!--   mutation2regulators <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     select(MutationRegulatorEdge) %>% -->
+<!--     unique() %>% -->
+<!--     mutate(`MutationRegulatorEdge` = if_else(MutationRegulatorEdge == "1", "activates", "suppresses")) %>% -->
+<!--     pull() -->
+
+<!--    anticancerPhaseIVs <- drugs %>% -->
+<!--     filter(MutationSymbol == mutation) %>% -->
+<!--     select(IfAntiCancerPhaseIV) %>% -->
+<!--     unique() %>% -->
+<!--     mutate(`IfAntiCancerPhaseIV` = if_else(IfAntiCancerPhaseIV == "AntiCancerPhaseIV", paste("**Phase IV** trial for some other cancer(s)"), paste(" **NOT** in Phase IV trials for any cancer."))) %>% -->
+<!--      pull() -->
+
+<!--    cat(sep = "","Evidence: Patient has **",mutation, "** mutation that **" ,mutation2regulators,"** regulator, ",target.regulators, " of **", length(target.regulons),  "** active risk-associated regulons containing the target(s), ", paste("**",paste(target.list, collapse=","),"**", sep=""), " of the drug **", paste(drug, collapse=","), "** with max RMST value of **", max(rmsts), "**.\n") -->
+<!--   # cat(sep="", drug, " has **", paste(gbmtrials, collapse=","), "** clinical trials for GBM.  \n" ) -->
+<!--   cat("  \n\n") -->
+<!--   cat("  \n") -->
+<!-- } -->
+
+<!-- ``` -->
+
+
+### Summary Table
+```{r active regulons filter, echo=FALSE, message=FALSE,warning=FALSE}
+network_table1 <- network_info %>%
+  #filter(TL1961DB85RegulonActivity == 1 & Miner_Target_Type == 'RegulonGene') %>%
+  group_by(`Target Gene(s)`) %>%
+  dplyr::rename(Drug.Target = `Target Gene(s)`) %>%
+  dplyr::summarize(Drugs = paste(unique(Drug), collapse =", "),
+            `Drug Const. Regulon Activity`= `Drug Constrained Regulon Activity`,
+            `Drug Const. Program Activity`= `Drug Constrained Program Activity`,
+            `Regulon Activity Summary` = `Regulon Activity Summary`,
+            `GBM Trials Phase` = max_glioblastoma.multiforme_phase,
+            `FDA Appr. Other` = `Other FDA Appr.`,
+            `Upstream Mutation in Patient` = paste(unique(MutatedDetail))
+            ) %>%
+  base::unique()
+
+#print(htmltools::tagList(datatable(network_table1,rownames = F,escape = F, caption = paste("Summary of Rank Ordered Drugs ", " \n",sep=""))))
+  network_table1 %>% datatable(
+                escape = F,
+                filter = "top",
+                rownames = F,
+                selection = "single",
+                style = "bootstrap4",
+                extensions = list("Buttons"=NULL,'RowGroup' = NULL),
+                callback = JS('table.page(3).draw(false);'),
+                options = list(
+                  rowGroup = list(dataSrc = 1),
+                  order = list(list(4, 'desc')),
+                  headerCallback = DT::JS(
+    "function(thead) {",
+    "  $(thead).css('font-size', '80%');",
+    "}"
+  ),
+                            defaultStyle.fontSize='10%',
+                    buttons =
+                        list(
+                            'pageLength',
+                            'colvis',
+                            list(extend='excel', title="gbmSYGNAL Details"),
+                            list(
+                                extend = 'pdf',
+                                title="gbmSYGNAL Network Details",
+                                pageSize = 'letter',
+                                orientation = 'landscape',
+                                filename = 'SYGNAL_Network_Details',
+                                customize = JS("function(doc){
+                                  doc.styles.tableHeader.color='white';
+                                  doc.defaultStyle.alignment = 'left';
+                                  doc.styles.tableHeader.alignment = 'left';
+                                  doc.pageMargins = [10,10,10,10];
+                                  doc.defaultStyle.fontSize = 7;
+                                  doc.styles.tableHeader.fontSize = 7;
+                                  doc.styles.title.fontSize = 9;
+                                  
+                                  }"
+                                )
+                            )
+                        ),
+                    scrollX = TRUE,
+                    # allow user to scroll wide tables horizontally
+                    stateSave = FALSE,
+                    
+                    # default column search strings and global search string
+                    target = "row",
+                    dom =
+                        'Britp'
+                    
+                )
+            ) %>%
+    DT::formatStyle(columns = colnames(network_table1),fontSize='80%')
+
+#cat('<div class="tocify-extend-page" data-unique="tocify-extend-page" style="height: 0;"></div>"')
+
+```

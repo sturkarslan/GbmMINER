@@ -1,0 +1,212 @@
+---
+title: "P76156_6 Mutations"
+#author: "SYGNOMICS"
+date: "01/09/2022"
+output:
+  html_document:
+    df_print: paged
+  always_allow_html: yes
+  pdf_document: yes
+  width: "100%"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+  options(width = 1200)
+  options(knitr.table.format = "html") 
+
+```
+
+
+```{r libraries, echo=FALSE, message=FALSE,warning=FALSE}
+library(tidyverse)
+library(DT)
+#source("code/patient_plots.R")
+#source("code/format_target_data.R")
+#library(grid)
+#library(gridExtra)
+#library(kableExtra)
+#library(icons)
+```
+
+
+```{r load data, echo=FALSE, message=FALSE,warning=FALSE}
+# Load patient data
+patient_id = 'P76156_6'
+filename <- paste("output/",patient_id, "/", patient_id, "_drug_therapy_activity.csv",sep="")
+        network_info <-
+            read_csv(
+                filename,
+            )
+        network_info <- network_info %>%
+          filter(!is.na(Mutations)) %>%
+          separate_rows(Mutations, sep = ":") %>%
+          separate_rows(Regulators, sep=":") %>%
+          filter(Mutations !="") %>%
+          filter(Regulators !="") %>%
+          select(Mutations,Regulators, `Regulon Activity Summary`,`Drug Constrained Regulon Activity`, Drug, `Drug Mechanism`,`Target Gene(s)`,`MutatedInPatient`)
+
+```
+
+
+```{r patient_mutations, echo=FALSE, message=FALSE,warning=FALSE}
+
+dna_dir = paste0("/Volumes/omics4tb2/SYGNAL/XCures/","P76156")
+# patient mutation data
+mutation_files <- dir(dna_dir, pattern = "*_somatic.tsv",full.names = T,recursive = T)
+# patient CNV data
+cnv_files <- dir(dna_dir, pattern = "*_cnvs.tsv",full.names = T,recursive = T)
+
+
+# Get patients mutation data
+patient_mutation_files <- grep(patient_id, mutation_files, value = T)
+# Get patients CNV data
+patient_cnv_files <- grep(patient_id, cnv_files, value = T)
+
+
+# Get mutated gene names
+patient_mutations <- patient_mutation_files %>%
+  map(read_delim, delim="\t") %>%
+  purrr::reduce(rbind) %>%
+  #mutate(AF = round(AF*100, digits = 2)) %>%
+  separate(col=hgncGene,sep = ",", into=c("GENE"), remove = F) %>%
+  filter(Consequence %in% c("missense","frameshift","stop_gained")) %>%
+  #pull(GENE) %>%
+  base::unique()
+
+```
+
+
+```{r filter_mutations, echo=FALSE, message=FALSE,warning=FALSE}
+patient_mutated_genes <- patient_mutations %>%
+  pull(GENE) %>%
+  unique()
+# format patient mutations as inoput for genomic interpreter
+patient_mutations_formatted <- patient_mutations %>%
+  mutate(protein = paste0(GENE, ":",AAchange)) %>%
+  mutate(sample = paste0("sample_", rownames(patient_mutations))) 
+
+write.table(patient_mutations_formatted, file=paste0("data/", patient_id, "/", patient_id, "_CGI_input.txt"),row.names = F,col.names=T, sep = "\t")
+
+# get networks with patient mutations
+network_mutations_inPatient <- network_info %>%
+  filter(Mutations %in% patient_mutated_genes)
+
+# get networks with regulators mutatued in patient
+network_regulators_mutations_inPatient<- network_info %>%
+  filter(Regulators %in% patient_mutated_genes)
+
+```
+
+
+```{r include = FALSE}
+# Why, oh why do I need this chunk?
+#datatable(NULL)
+DT::datatable(matrix())
+```
+
+
+### Causal flow ** MUTATIONS ** mutated in Patient
+```{r causal_mutations_inPatient, echo=FALSE, message=FALSE,warning=FALSE, results='asis'}
+if(length(network_mutations_inPatient$Mutations) != 0) {
+  cat("\n\n")
+  cat(knitr::knit_print(DT::datatable(network_mutations_inPatient,
+                                     #caption = "Drugs matching to targets",
+                                     escape=F,
+                                     width = "100%",
+                                     height = "100%",
+                                     options = list(dom='p', 
+                                                    pageLength=5)
+                                     )
+
+  ))
+  cat("\n\n")
+} else {
+  cat("\n\n")
+  cat("None of the patient mutations map to **mutations** of causal mechanistic flows in the patients network")
+}
+
+```
+
+### Causal flow ** REGULATORS ** mutated in Patient
+```{r causal_regulators_mutated_inPatient, echo=FALSE, message=FALSE,warning=FALSE, results='asis'}
+if(length(network_regulators_mutations_inPatient$Mutations) != 0) {
+  cat("\n\n")
+  cat(knitr::knit_print(DT::datatable(network_regulators_mutations_inPatient,
+                                     #caption = "Drugs matching to targets",
+                                     escape=F,
+                                     width = "100%",
+                                     height = "100%",
+                                     options = list(dom='p',
+                                                    pageLength=5)
+                                     )
+
+  ))
+  cat("\n\n")
+} else {
+  cat("\n\n")
+  cat("None of the patient mutations map to **regulators** of causal mechanistic flows in the patients network")
+}
+
+```
+
+
+```{r load_CGI_analysis_results, echo=FALSE, message=FALSE,warning=FALSE, results='asis'}
+cat(sep="", '<a name="cgi_mutations"></a>')
+# load mutations
+cgi_mutation_results <- read.delim(paste0("data/", patient_id, "/", patient_id, "_CGI_mutation_analysis.tsv"), sep="\t") %>%
+  select(-ALT,-REF,-POS_HG19,-BOOSTDM_DS,-INFO,-BOOSTDM_SCORE,-SOURCE,-CONSENSUS_ROLE,-START,-END,-STRAND, -TRANSCRIPT)
+
+# load prescriptions
+cgi_prescription_results <- read.delim(paste0("data/", patient_id, "/", patient_id, "_CGI_drug_prescription.tsv"), sep="\t")
+
+```
+
+
+### Cancer Genome Interpreter ** MUTATIONS ** of Patient Mutations
+```{r cgi_mapping_mutations, echo=FALSE, message=FALSE,warning=FALSE, results='asis'}
+cat(sep="", '<a name="cgi_prescription"></a>')
+
+if(length(cgi_mutation_results$MUTATION) != 0) {
+  cat("\n\n")
+  cat(knitr::knit_print(DT::datatable(cgi_mutation_results,
+                                     #caption = "Drugs matching to targets",
+                                     escape=F,
+                                     width = "100%",
+                                     height = "100%",
+                                     options = list(dom='p',
+                                                    pageLength=5)
+                                     )
+
+  ))
+  cat("\n\n")
+} else {
+  cat("\n\n")
+  cat("None of the patient mutations map Cancer Genome Interperater **mutations**")
+}
+
+```
+
+
+### Cancer Genome Interpreter ** PRESCRIPTIONS ** of Patient Mutations
+```{r cgi_mapping_prescriptions, echo=FALSE, message=FALSE,warning=FALSE, results='asis'}
+
+if(length(cgi_prescription_results$DRUGS) != 0) {
+  cat("\n\n")
+  cat(knitr::knit_print(DT::datatable(cgi_prescription_results,
+                                     #caption = "Drugs matching to targets",
+                                     escape=F,
+                                     width = "100%",
+                                     height = "100%",
+                                     options = list(dom='p',
+                                                    pageLength=5)
+                                     )
+
+  ))
+  cat("\n\n")
+} else {
+  cat("\n\n")
+  cat("None of the patient mutations map Cancer Genome Interperater **Prescriptions**.")
+}
+```
+
