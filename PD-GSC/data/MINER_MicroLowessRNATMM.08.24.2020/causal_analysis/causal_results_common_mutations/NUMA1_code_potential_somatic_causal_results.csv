@@ -1,0 +1,3 @@
+,Mutation,Regulator,Regulon,MutationRegulatorEdge,-log10(p)_MutationRegulatorEdge,RegulatorRegulon_Spearman_R,RegulatorRegulon_Spearman_p-value,Regulon_stratification_t-statistic,-log10(p)_Regulon_stratification,Fraction_of_edges_correctly_aligned
+2897,NUMA1_code_potential_somatic,ENSG00000109381,2897,1.0,2.038682345887377,0.6838262697740976,9.040613206213917e-77,5.219130982111587,4.373454508814174,1.0
+2403,NUMA1_code_potential_somatic,ENSG00000092067,2403,-1.0,1.3236723133264903,-0.21685262159567475,2.960927786657024e-07,4.923870991170626,1.996910786529241,1.0
