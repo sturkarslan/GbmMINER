@@ -1,0 +1,2 @@
+,Mutation,Regulator,Regulon,MutationRegulatorEdge,-log10(p)_MutationRegulatorEdge,RegulatorRegulon_Spearman_R,RegulatorRegulon_Spearman_p-value,Regulon_stratification_t-statistic,-log10(p)_Regulon_stratification,Fraction_of_edges_correctly_aligned
+888,ATF_2_TRANSCRIPTION_FACTOR_NETWORK_PID_NCI_NATURE_nonsilent_somatic,ENSG00000139083,888,1.0,1.380669836285285,0.2889669754715621,5.319994671720451e-12,2.0445483930731063,1.3255192203499813,1.0

@@ -1,0 +1,243 @@
+---
+title: "Network Activity"
+author: "Serdar Turkarslan"
+date: "10/5/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, include=F,echo=FALSE}
+library(tidyverse)
+library(here)
+library(DT)
+library(data.table)
+library(gridExtra)
+library(jsonlite)
+source("code/utilities_drug.R")
+```
+
+
+```{r include = FALSE}
+# This chunk is needed to print dtatable in the html
+DT::datatable(matrix())
+```
+
+
+```{r load.programs, echo=F, warning=FALSE}
+# load program info
+programs <- read_json(here("data/MINER_MicroLowessRNATMM.08.24.2020/transcriptional_programs.json"), simplifyVector = T)
+
+# load drug info
+#drug_info <- read_csv(here("data/PreliminaryDrugTableForTherapyPrioritizationGBMMINER.csv"),col_types = cols())
+drug_info <- read_csv(here("data/opentargets_hts_drug_details_network_activity.csv")) %>%
+  dplyr::rename(Drug = molecule_name) %>%
+  dplyr::rename(TargetSymbol = approved_name) %>%
+  dplyr::rename(DrugTarget = target_id) %>%
+  dplyr::rename(RegulonRegulator = Regulator) %>%
+  dplyr::rename(DrugMechOfAction = mechanism_of_action) %>%
+  dplyr::rename(Cancer_PhaseIV = max_trial_phase)
+
+drug_details <- read_csv(here("data/opentargets_Sep2721.csv"),col_types = cols())
+
+# load IC50 data
+hts.ic50 <- read.csv(here("data/HTS_IC50_data_10-1-2021.csv"))
+
+# load AUC data
+hts.auc <- read.csv(here("data/HTS_AUC_data_10-1-2021.csv"))
+
+# for(row in 1:length(drug_info$Regulon)){
+#   regulon = drug_info[row,"Regulon"]
+#   program = names(programs[unlist(lapply(names(programs), function (i) regulon %in% programs[[i]]))])
+#   drug_info[row,"Program"]<- as.double(program)
+# }
+```
+
+
+## Load regulon activities
+```{r load.regulon, echo=FALSE, warning=FALSE, results='asis'}
+### Load regulon activity for each sample
+samples <- dir("data",pattern = "Regulon_Activity_*",full.names = T)
+
+all.samples.activities <- data.frame()
+### Loop through each sample 
+for(sample in samples){
+  cat("processing ", sample, "\n")
+  # Get sample name
+  sample.name <- strsplit(sample, split = "/Regulon_Activity_")[[1]][2]
+  sample.name <- strsplit(sample.name, split=".csv")[[1]][1]
+  # further format samole name to match with IC50 colnames
+  sample.id <- strsplit(sample.name, split = "_")[[1]][2]
+  sample.id <- strsplit(sample.id, split = "-")[[1]][1]
+  
+  
+  # create directory to collect results for each sample
+  dir_path <- paste0(here("output/"), sample.name)
+  if(!dir.exists(dir_path)) {
+    dir.create(dir_path)
+  }
+  
+  # Regulon and program activity files
+  reg_out <- read_csv(sample) %>%
+    dplyr::rename("regulon" = 1, "activity" = 2)
+  
+  prog_out <- read_csv(paste("data/Program_Activity_", sample.name, ".csv", sep=""),col_types = cols()) %>%
+    dplyr::rename("program" = 1, "activity" = 2)
+  
+  ## generate drug regulon/program activity
+  drug_reg <- getDrugTherapyActivity(drug_info, regulon=reg_out, program=prog_out)
+  
+ # get IC50 values for the sample
+  sample.ic50 <- try(hts.ic50 %>%
+                       dplyr::select(`DRUG.CANDIDATE`, starts_with(sample.id)) %>%
+                       dplyr::rename(IC50 = 2) %>%
+                       dplyr::rename(Drug = 1)
+                    )
+                     
+                      
+
+  if(length(grep("Error", sample.ic50)) == 0){
+    sample.ic50 <- sample.ic50
+  } else {
+    sample.ic50 <- NA
+  }
+  
+  # get AUC values for the sample
+  sample.auc <- try(hts.auc %>%
+                       dplyr::select(`DRUG.CANDIDATE`, starts_with(sample.id)) %>%
+                       dplyr::rename(`AUCmin-max` = 2) %>%
+                       dplyr::rename(Drug = 1)
+                    )
+                     
+                      
+
+  if(length(grep("Error", sample.auc)) == 0){
+    sample.auc <- sample.auc
+  } else {
+    sample.auc <- NA
+  }
+  
+  # convert drug names to upper case  
+  sample.ic50$Drug <- toupper(sample.ic50$Drug)
+  sample.auc$Drug <- toupper(sample.auc$Drug)
+ 
+  # Add IC50 values from HTS for the drugs
+  drug.reg.ic50 <- left_join(drug_reg, sample.ic50, by='Drug')
+  
+  # Add AUC values from HTS for the drugs
+  drug.reg.merged <- left_join(drug.reg.ic50, sample.auc, by='Drug')
+  
+  # Filter for network for which we have the HTS AUC data
+  drug.reg.sample <- drug.reg.merged %>%
+    filter(Drug %in% sample.auc$Drug) %>%
+    unique()
+  # add sample id to data frame
+  drug.reg.sample$sample <- sample.id
+  
+  ## Reorder drugs based on their IC50 values
+  drug.order <- drug.reg.sample %>%
+    arrange(DrugConstrainedRegulonActivity) %>%
+    pull(Drug)
+ 
+  write_csv(drug.reg.sample, paste0(dir_path, "/", sample.name, "_drug_therapy_activity_IC50.csv")) 
+  all.samples.activities <- bind_rows(all.samples.activities, drug.reg.sample)
+  
+  sum1 <- all.samples.activities %>%
+    filter(!is.nan(DrugConstrainedRegulonActivity)) %>%
+    pull(Drug) %>%
+    unique()
+  
+  sum2 <- all.samples.activities %>%
+    filter(!is.nan(DrugConstrainedProgramActivity)) %>%
+    pull(Drug) %>%
+    unique() 
+  
+  cat("Total Drugs with Regulon Activity:", length(sum1), "\n")
+  cat("Total Drugs with Program Activity:", length(sum2), "\n")
+  
+  
+  
+}
+# cat(knitr::knit_print(DT::datatable(all.samples.activities,
+#                                       width = "50%",
+#                                       #height = "100%",
+#                                       options = list(
+#                                                      pageLength = 15)
+#                                       )))
+```
+
+## Comparison
+```{r comparison_plos, echo=FALSE, results='asis'}
+
+## Reorder drugs based on their IC50 values
+drug.order <- all.samples.activities %>%
+  filter(!is.nan(DrugConstrainedRegulonActivity)) %>%
+  arrange(DrugConstrainedRegulonActivity) %>%
+  mutate(`1minusAUC_scaled` = 1 - (scales::rescale(`AUCmin-max`, to=c(0,1))))
+
+
+## Heatmap plot for IC50
+q1 <- ggplot(drug.order, aes(y=sample, x=factor(Drug), fill=IC50))
+q1 <- q1 + geom_tile() + 
+  scale_fill_gradientn(limits=c(1e-10,1e-05), colours=c("red", "white", "blue"))
+q1 <- q1 + theme(axis.text.x = element_text(angle=90))
+q1
+
+
+## Heatmap plot for AUC
+q2 <- ggplot(drug.order, aes(y=factor(Drug), x=sample, fill=`1minusAUC_scaled`))
+q2 <- q2 + geom_tile() #+ 
+q2 <- q2 + scale_fill_gradient2(low = "blue",mid = "white",high = "red", midpoint = 0.5)
+#q2 <- q2 + scale_fill_gradientn(colours = c("white", "red", "blue"), values=c(0,0.5,1))
+  #scale_fill_gradientn(limits=c(1e-10,1e-05), colours=c("red", "white", "blue"))
+q2 <- q2 + theme(axis.text.x = element_text(angle=90),  axis.text.y = element_text(size=7))
+q2 <- q2 + guides(fill=guide_legend(title="1-AUC"))
+q2 <- q2 + labs(x="PDGSC", y="Drug")
+q2
+
+
+## Heatmap plot for Regulonactivity
+s <- ggplot(drug.order, aes(y=factor(Drug), x=sample, fill=DrugConstrainedRegulonActivity))
+s <- s + geom_tile() + 
+  scale_fill_gradient2(low = "blue",mid = "white",high = "red", midpoint = 0)
+s <- s + theme(axis.text.x = element_text(angle=90),  axis.text.y = element_blank())
+s <- s + guides(fill=guide_legend(title="Regulon\nActivity"))
+s <- s + labs(x="PDGSC", y="Drug")
+s
+
+## Heatmap plot for Program Activity
+s2 <- ggplot(drug.order, aes(y=factor(Drug), x=sample, fill=DrugConstrainedProgramActivity))
+s2 <- s2 + geom_tile() + 
+  scale_fill_gradient2(low = "blue",mid = "white",high = "red", midpoint = 0)
+s2 <- s2 + theme(axis.text.x = element_text(angle=90), axis.text.y = element_blank())
+s2 <- s2 + guides(fill=guide_legend(title="Program\nActivity"))
+s2 <- s2 + labs(x="PDGSC", y="Drug")
+s2
+
+```
+
+## Regulon activity vs 1-minus AUC
+```{r regulonactivity_vs_AUC, echo=FALSE, results='asis'}
+
+#Arrange them in a grid
+gg1 <- ggplot_gtable(ggplot_build(q2))
+gg2 <- ggplot_gtable(ggplot_build(s))
+
+gg3 <- grid.arrange(gg1, gg2, ncol=2)
+print(gg3)
+
+```
+
+## Program activity vs 1-minus AUC
+```{r programactivity_vs_AUC, echo=FALSE, results='asis'}
+
+#Arrange them in a grid
+gg4 <- ggplot_gtable(ggplot_build(q2))
+gg5 <- ggplot_gtable(ggplot_build(s2))
+
+gg6 <- grid.arrange(gg4, gg5, ncol=2)
+print(gg6)
+
+```
