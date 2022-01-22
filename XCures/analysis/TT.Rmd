@@ -1,0 +1,111 @@
+---
+title: "Patient Analysis Pipeline"
+author: "Serdar Turkarslan"
+date: "1/19/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries, include=FALSE}
+library(tidyverse)
+library(here)
+library(DT)
+library(gridExtra)
+library(jsonlite)
+library(plyr)
+library(purrr)
+library(clusterProfiler)
+library(msigdbr)
+library(enrichplot)
+library(ReactomePA)
+library(AnnotationDbi)
+library(org.Hs.eg.db)
+library(data.table)
+library(tictoc)
+library(fs)
+source("code/utilities_drug.R")
+source("code/patient_get_network_details.R")
+source("code/regulon_enrichment.R")
+source("code/patient_map_drugs.R")
+source("code/patient_drug_pathway_enrichment.R")
+source("code/patient_rankorder_drug_table.R")
+source("code/01_analyze_patient.R")
+source("code/format_target_data.R")
+source("code/patient_plots.R")
+```
+
+```{r load_patient, echo=FALSE, warning=FALSE,results='asis'}
+patient_folders_path <- fs::dir_info("/Volumes/omics4tb2/SYGNAL/XCures/patients_network_activities/")
+patient_folders <- fs::path_file(patient_folders_path$path)
+# Filter samples that will not be anlyzed
+patient_folders_current <- patient_folders[grep("TL-", patient_folders)]
+patient_folders_current <- patient_folders_current[grep("TL-18-31DCF0", patient_folders_current, invert = T)]
+```
+
+
+```{r analysis_loop, echo=FALSE, warning=FALSE,results='asis'}
+#for(patient_sample in patient_folders_current){
+#  tmp1 <- analyze_patient(sample.name = patient_sample)
+  
+#}
+```
+
+
+
+
+
+```{r echo=FALSE, warning=FALSE,results='asis'}
+patient_id = "TL-18-31DCF0"
+type = c("regulon", "program")
+disease_relevant = FALSE
+
+patient_id = patient_id
+type = "regulon"
+
+## Load patient data
+filename <- paste("output/",patient_id, "/", patient_id, "_drug_therapy_activity.csv",sep="")
+
+## load network file for patient
+network_info <- read_csv(filename) %>%
+  filter(`Drug Constrained Regulon Activity` > 0.8)
+
+## Load coohrt survival data
+pheno <- read_csv("../data/TCGA_Survival_Gbm.csv") %>%
+  arrange(desc(GuanScore))
+
+## Load cohort expression data
+cohort_expr <- read.csv("/Volumes/omics4tb2/SYGNAL/GBM-Serdar/MINER_MicroLowessRNATMM.08.24.2020/GbmMicroRNAMergedWithIDsZScored.csv")
+
+## get cohort expression data genes
+cohort_genes <- cohort_expr %>%
+  dplyr::pull(X)
+
+## Load gene identifier mappings
+identifiers <- read.delim("../data/identifier_mappings.txt", sep = "\t") %>%
+  filter(Source == "Gene Name")
+
+## Load patient's expression data for plotting and then z-score
+patient_exp_filename <- paste0("/Volumes/omics4tb2/SYGNAL/XCures/patients_processed_data/",patient_id, "/RNA/", patient_id, ".genes.results")
+patient_exp <- read.delim(patient_exp_filename, sep="\t") %>%
+  separate(gene_id, into = c("Gene_ID", "Gene_Symbol"), sep = "_") %>%
+  dplyr::select(Gene_ID, Gene_Symbol, TPM) %>%
+  filter(Gene_ID %in% cohort_genes) %>%
+  mutate(zscore = (TPM - mean(TPM))/sd(TPM))
+
+## load additional evidence file
+evidence <- read.csv("../data/Additional_Evidences_Gene.txt", sep = "\t",fileEncoding="latin1")
+
+## load clinical trials info file
+# Load clinical trials data
+clinical_trials <- read.delim("../data/Glioblastoma_ClinicalTrials_01092022.txt", header = T, sep = "\t")
+
+
+
+
+zz <- format_target_data(target="VEGFA", count=1, network_info=network_info, clinical_trials=clinical_trials, evidence=evidence)
+
+```
+

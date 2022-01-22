@@ -12,8 +12,9 @@ library(ReactomePA)
 library(AnnotationDbi)
 library(org.Hs.eg.db)
 library(data.table)
+library(fs)
 ################ Mapping function   ################
-map_drugs <- function(drug_info_pr, sample.id = sample.name, type="regulon", disease=TRUE, network_dir=network_dir_input,mutation_files=mutation_files){
+map_drugs <- function(drug_info_pr, sample.id = sample.name, type="regulon", disease=TRUE, network_dir=network_dir_input,mutation_files=mutation_files,analysis_type="TEMPUS"){
 
   all.samples.activities <- data.frame()
 
@@ -56,18 +57,33 @@ map_drugs <- function(drug_info_pr, sample.id = sample.name, type="regulon", dis
 
   ## Mutations
   # Get patients mutation data
-  patient_mutation_files <- grep(sample.id, mutation_files, value = T)
+  patient_mutation_files <- mutation_files
+  if(analysis_type == "TEMPUS"){
+    patient_mutations <- patient_mutation_files %>%
+      map(read_delim, delim="\t") %>%
+      purrr::reduce(rbind) %>%
+      separate_rows(`ANN[*].GENE`, sep = ",") %>%
+      base::unique() %>%
+      separate_rows(`ANN[*].IMPACT`, sep=",") %>%
+      base::unique() %>%
+      filter(`ANN[*].IMPACT` %in% c("MODERATE","HIGH")) %>%
+      base::unique() %>%
+      dplyr::rename("GENE" = `ANN[*].GENE`) %>%
+      pull(GENE) %>%
+      base::unique()
+  } else{
+    # Get mutated gene names
+    patient_mutations <- patient_mutation_files %>%
+      map(read_delim, delim="\t") %>%
+      purrr::reduce(rbind) %>%
+      #mutate(AF = round(AF*100, digits = 2)) %>%
+      separate(col=hgncGene,sep = ",", into=c("GENE"), remove = F) %>%
+      filter(Consequence %in% c("missense","frameshift","stop_gained")) %>%
+      pull(GENE) %>%
+      base::unique()
+  }
 
-  # Get mutated gene names
-  patient_mutations <- patient_mutation_files %>%
-    map(read_delim, delim="\t") %>%
-    purrr::reduce(rbind) %>%
-    #mutate(AF = round(AF*100, digits = 2)) %>%
-    separate(col=hgncGene,sep = ",", into=c("GENE"), remove = F) %>%
-    filter(Consequence %in% c("missense","frameshift","stop_gained")) %>%
-    pull(GENE) %>%
-    base::unique()
-
+  # map patient mutations to drug targetsthat are active
   drug_reg_mut <- drug_reg %>%
     mutate(MutatedInPatient = if_else(MutationGene %in% patient_mutations, paste("TRUE"), paste("FALSE"))) %>%
     mutate(TargetMutatedInPatient = if_else(strsplit(DrugTargetAll,split = ",",fixed = T) %in% patient_mutations,paste("TRUE"), paste("FALSE")))

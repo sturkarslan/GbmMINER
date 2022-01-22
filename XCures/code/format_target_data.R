@@ -1,13 +1,11 @@
 
-format_target_data <- function(target, count){
+format_target_data <- function(target, count, network_info, clinical_trials, evidence){
   targets <- strsplit(target, split = ",")[[1]]
   # We add target again for multiple targets to be able to match
-  targets <- append(targets, target)
-  # Load clinical trials data
-  ct <- read.delim("../data/Glioblastoma_ClinicalTrials_01092022.txt", header = T, sep = "\t")
+  targets <- base::unique(append(targets, target))
 
-  # Load addtional evidence data
-   evidence1 <- read.csv("../data/Additional_Evidences_Gene.txt", sep = "\t",fileEncoding="latin1") %>%
+  # Load additional evidence data
+   evidence1 <- evidence %>%
      filter(Gene %in% targets) %>%
      mutate(Title = if_else(Type == "Publication",
                             paste0('<a href="https://pubmed.ncbi.nlm.nih.gov/', PMID,'">', Title,'</a>'),
@@ -43,24 +41,24 @@ format_target_data <- function(target, count){
   # Regulon activity counts
   activity.counts <- network_selected%>%
     separate(`Regulon Activity Summary`, sep=" ", into=c("i1","Over","i3","Under","i5","All"), remove = F) %>%
-    select("Over","Under","All") %>%
-    unique()
+    dplyr::select("Over","Under","All") %>%
+    base::unique()
 
   # Regulon activity score
   activity.score <- network_selected %>%
     pull(`Drug Constrained Regulon Activity`) %>%
-    unique()
+    base::unique()
 
   # List of target genes
   target.list <- network_selected %>%
     pull(`Target Gene(s)`) %>%
-    unique()
+    base::unique()
 
   # List of separated target genes
   target.list.seperated <- network_selected %>%
     separate_rows(`Target Gene(s)`, sep=",") %>%
     pull(`Target Gene(s)`) %>%
-    unique()
+    base::unique()
 
   # GBM Trials info
   gbmtrials <- network_selected %>%
@@ -69,19 +67,19 @@ format_target_data <- function(target, count){
   # Target Mutations in patient
   target_mutated <- network_selected %>%
     pull(TargetMutatedInPatient) %>%
-    unique()
+    base::unique()
 
   # FDA approval info
   anticancerPhaseIVs <- network_selected %>%
-    select(`Other FDA Appr.`) %>%
-    unique() %>%
+    dplyr::select(`Other FDA Appr.`) %>%
+    base::unique() %>%
     mutate(`Other FDA Appr.` = if_else(`Other FDA Appr.` == TRUE, paste("**Phase IV** trial for some other cancer(s)"), paste(" **NOT** in Phase IV trials for any cancer."))) %>%
     pull()
 
   # Hallmarks information
   hallmarks.list <- network_selected %>%
     dplyr::select(Hallmarks) %>%
-    unique() %>%
+    base::unique() %>%
     pull()
 
   # Hallmarks seperated
@@ -92,20 +90,20 @@ format_target_data <- function(target, count){
   # Clinical trials
   clinical_trials_raw <- tibble()
   for(target.drug in target.drugs){
-    ct1 <- filter(ct, grepl(target.drug, toupper(Interventions)))
+    ct1 <- filter(clinical_trials, grepl(target.drug, toupper(Interventions)))
     clinical_trials_raw <- bind_rows(clinical_trials_raw, ct1)
   }
 
   clinical_trials <- clinical_trials_raw %>%
     mutate(Title = paste0('<a href="',URL,'">', Title, '</a>')) %>%
-    select(NCT.Number,Title,Status,Interventions,Phases,First.Posted)
+    dplyr::select(NCT.Number,Title,Status,Interventions,Phases,First.Posted)
 
 
 
 
   # Build the drug summary table
   target.table <- network_selected %>%
-    select(Drug, max_glioblastoma.multiforme_phase, `Other FDA Appr.`, `Drug Action`, `Toxicity Class`, `MEDDRA Code`) %>%
+    dplyr::select(Drug, max_glioblastoma.multiforme_phase, `Other FDA Appr.`, `Drug Action`, `Toxicity Class`, `MEDDRA Code`) %>%
     mutate(Drug_temp = Drug) %>%
     mutate(Drug = paste0('<a name=#',Drug,' href="https://www.ebi.ac.uk/chembl/g/#search_results/all/query=', Drug,'">', Drug, '</a>')) %>%
     mutate(Action = `Drug Action`) %>%
@@ -135,7 +133,7 @@ format_target_data <- function(target, count){
         ' AND Glioblastoma&locStr=&distance=0"> <button type="button" class="btn btn-primary btn-sm disabled">Clinical Trials</button></a>'
       )
     )) %>%
-    select(-max_glioblastoma.multiforme_phase,
+    dplyr::select(-max_glioblastoma.multiforme_phase,
            -`Other FDA Appr.`,
            -Drug_temp,
            -`MEDDRA Code`,
@@ -287,7 +285,7 @@ format_target_data <- function(target, count){
   cat("### Network Plots \n")
   # Plots
   # Activity histogram
-  ppp.act <- plot_activity_histogram(target.drugs[1])
+  ppp.act <- plot_activity_histogram(target.drugs[1], network_info)
 
   # target gene expression
   ppp.exp <- plot_expression(target=target)
