@@ -1,5 +1,5 @@
 library(fs)
-source("code/patient_map_drugs.R")
+#source("code/patient_map_drugs.R")
 # Runs network and drug mapping for individual patients
 ###############################################################
 

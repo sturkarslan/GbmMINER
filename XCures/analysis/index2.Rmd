@@ -1,0 +1,445 @@
+---
+title: "Patient Reports"
+#author: "SYGNOMICS"
+date: "01/09/2022"
+output:
+  html_document:
+    df_print: paged
+  always_allow_html: yes
+  pdf_document: yes
+  width: "100%"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+  options(width = 1200)
+  options(knitr.table.format = "html") 
+
+```
+
+
+```{r libraries, echo=FALSE, message=FALSE,warning=FALSE}
+library(tidyverse)
+library(DT)
+#source("code/patient_plots.R")
+#source("code/format_target_data.R")
+source("code/calculate_report_regulon_stats.R")
+library(grid)
+library(gridExtra)
+library(kableExtra)
+library(plyr)
+library("htmltools")
+library("bsplus")
+#library(icons)
+```
+
+
+```{r load_patients, echo=FALSE, message=FALSE,warning=FALSE}
+## Load patient specific files
+patient_folders_path <- fs::dir_info("/Volumes/omics4tb2/SYGNAL/XCures/patients_network_activities/")
+patient_folders <- fs::path_file(patient_folders_path$path)
+# Filter samples that will not be anlyzed
+patient_folders_current <- patient_folders[grep("TL-", patient_folders)]
+patient_folders_current <- patient_folders_current[grep("TL-18-31DCF0", patient_folders_current, invert = T)]
+```
+
+
+```{r load_global_data, echo=FALSE, message=FALSE,warning=FALSE}
+## load additional evidence file
+evidence <- read.csv("../data/Additional_Evidences_Gene.txt", sep = "\t",fileEncoding="latin1")
+
+## load clinical trials info file
+clinical_trials <- read.delim("../data/Glioblastoma_ClinicalTrials_01092022.txt", header = T, sep = "\t")
+```
+
+
+
+
+
+```{r load data, echo=FALSE, message=FALSE,warning=FALSE}
+# Load patient data
+patient_id = patient_id
+filename <- paste("output/",patient_id, "/", patient_id, "_drug_therapy_activity.csv",sep="")
+        network_info <-
+            read_csv(
+                filename,
+                col_types = cols(`All Regulon(s)` = col_character(), 
+        `Overactive Regulon(s)` = col_character(), 
+        `Underactive Regulon(s)` = col_character(), 
+        `All Program(s)` = col_character(), 
+        `Overactive Program(s)` = col_character(), 
+        `Underactive Program(s)` = col_character(), 
+        Mutations = col_character(), Regulators = col_character(), 
+        MutatedDetail = col_character())
+            )
+        network_info <- network_info %>%
+          filter(`Drug Constrained Regulon Activity` > 0.8)
+
+```
+
+```{r patients_loop, results='asis', echo=F, warning=F, message=F}
+## Loop through patient folders
+for(patient_id in patient_folders_current[1]){
+  
+  # load network info
+  filename <- paste("output/",patient_id, "/", patient_id, "_drug_therapy_activity.csv",sep="")
+        network_info <-
+            read_csv(
+                filename,
+                col_types = cols(`All Regulon(s)` = col_character(), 
+        `Overactive Regulon(s)` = col_character(), 
+        `Underactive Regulon(s)` = col_character(), 
+        `All Program(s)` = col_character(), 
+        `Overactive Program(s)` = col_character(), 
+        `Underactive Program(s)` = col_character(), 
+        Mutations = col_character(), Regulators = col_character(), 
+        MutatedDetail = col_character())
+            )
+        network_info <- network_info %>%
+          filter(`Drug Constrained Regulon Activity` > 0.8)
+  
+  
+  
+} # for
+
+
+```
+
+
+
+```{r patient_mutations,echo=FALSE, message=FALSE,warning=FALSE}
+# load patient mutations from DNA seq
+# define mutations directory
+dna_dir = fs::path("/Volumes/omics4tb2/SYGNAL/XCures/patients_processed_data",patient_id,"DNA")
+# Get list of all mutation files from XCures folder
+mutation_files1 <- fs::dir_ls(dna_dir, regexp =".annotated.txt" )
+mutation_files2 <- fs::dir_ls(dna_dir, regexp ="_somatic.tsv" )
+mutation_files <- c(mutation_files1,mutation_files2)
+
+# patient mutation data
+mutation_files <- dir(dna_dir, pattern = "*_somatic.tsv",full.names = T,recursive = T)
+# Get patients mutation data
+patient_mutation_files <- grep(patient_id, mutation_files, value = T)
+# Get mutated gene names
+patient_mutations <- patient_mutation_files %>%
+  map(read_delim, delim="\t") %>%
+  purrr::reduce(rbind) %>%
+  #mutate(AF = round(AF*100, digits = 2)) %>%
+  separate(col=hgncGene,sep = ",", into=c("GENE"), remove = F) %>%
+  filter(Consequence %in% c("missense","frameshift","stop_gained")) %>%
+  filter(OFA > 0.2) %>%
+  #pull(GENE) %>%
+  base::unique()
+
+mutation_count <- length(patient_mutations$pos)
+mutation_gene_count <- length(unique(patient_mutations$GENE))
+
+# collect patient mutation analysis results from CGI
+mutations_cgi <- read.delim("data/P76156_6/P76156_6_CGI_mutation_analysis.tsv") %>%
+  filter(BOOSTDM_DS == "driver (oncodriveMUT)") %>%
+  select(MUTATION,CHR,TYPE,SYMBOL,PROTEIN_CHANGE,BOOSTDM_DS,CONSEQUENCE,IS_CANCER_GENE)
+
+# collect patient prescription analysis results from CGI
+prescriptions_cgi <- read.delim("data/P76156_6/P76156_6_CGI_drug_prescription.tsv") %>%
+  select(SAMPLE_ALTERATION,BIOMARKER,DRUGS,DISEASES,RESPONSE,EVIDENCE_LABEL,SOURCE_DETAILS)
+
+```
+
+
+
+```{r soc_drugs, echo=FALSE, message=FALSE,warning=FALSE}
+soc_drugs <- c("TEMOZOLOMIDE","CARMUSTINE","BEVACIZUMAB","LOMUSTINE", "NIMUSTINE","FOTEMUSTINE")
+
+# GBM clinical trials
+ct <- read.delim("../data/Glioblastoma_ClinicalTrials_01092022.txt", header = T, sep = "\t")
+
+
+
+```
+
+```{r message=TRUE, warning=TRUE, echo=FALSE}
+evidence1 <- read.csv("../data/Additional_Evidences_Gene.txt", sep = "\t",fileEncoding="latin1") %>%
+     mutate(Title = if_else(Type == "Publication",
+                            paste0('<a href="https://pubmed.ncbi.nlm.nih.gov/', PMID,'">', Title,'</a>'),
+                            if_else(Type == "Preprint",
+                                    paste0('<a href="https://www.biorxiv.org/content/',PMID,'">', Title,'</a>'),
+                            paste0('<a href="https://patents.google.com/patent/', PMID,'">', Title,'</a>')))) %>%
+  mutate(URL = if_else(Type == "Publication",
+                            paste0('<a href="https://pubmed.ncbi.nlm.nih.gov/', PMID,'">', PMID,'</a>'),
+                            if_else(Type == "Preprint",
+                                    paste0('<a href="https://www.biorxiv.org/content/',PMID,'">', PMID,'</a>'),
+                            paste0('<a href="https://patents.google.com/patent/', PMID,'">', PMID,'</a>'))))
+
+evidence2 <- evidence1 %>%
+    separate_rows(Gene,sep = ",")
+
+```
+
+```{r echo=FALSE, message=FALSE,warning=FALSE}
+  network_info2 <- left_join(network_info, evidence1, by=c(`Target Gene(s)` = "Gene"))
+```
+
+```{r patient meta, results='asis', echo=FALSE, message=FALSE,warning=FALSE}
+        tmp6 <- tibble(`Patient ID` = patient_id,
+                  `Age` = "",
+                  `Sex` = "",
+                  `MGMT Methylation` = "Methylated",
+                  `ExomeSeq` = paste("Yes"),
+                  `RNASeq` = paste("Yes"),
+                  `CNV` = paste("Yes"),
+                  `Profiling Type` = "Unknown"
+                  )
+     datatable(tmp6, options = list(dom=''))
+
+
+```
+
+
+```{r include = FALSE}
+# Why, oh why do I need this chunk?
+#datatable(NULL)
+DT::datatable(matrix())
+```
+
+
+```{r executive_summary_data, results='asis', echo=F, warning=F, message=F}
+# soc drugs
+network_info_soc <- network_info2 %>%
+  filter(Drug %in% soc_drugs)
+# GBM trials
+network_info_gbmtrials <- network_info2 %>%
+  filter(!is.na(max_glioblastoma.multiforme_phase)) %>%
+  filter(!(Drug %in% soc_drugs))
+# FDA Approved
+network_info_fda <- network_info2 %>%
+  filter(`Other FDA Appr.` == TRUE) %>%
+  filter(is.na(max_glioblastoma.multiforme_phase)) %>%
+  filter(!(Drug %in% soc_drugs))
+
+```
+
+## Summary
+```{r executive_summary, results='asis', echo=F, warning=F, message=F}
+soc_stats <- calculate_stats(network_info_soc)
+gbmtrials_stats <- calculate_stats(network_info_gbmtrials)
+fdaappr_stats <- calculate_stats(network_info_fda)
+
+# total overactive regulons
+total_oa_regs <- unique(c(soc_stats$oa_regs, gbmtrials_stats$oa_regs, fdaappr_stats$oa_regs))
+# total regulons
+total_regs <- unique(c(soc_stats$all_reg, gbmtrials_stats$all_reg, fdaappr_stats$all_reg))
+
+cat(sep="", "* SYGNAL Analysis of the patient's molecular profiling data matched to <span class='badge'> **",length(total_regs),"** </span>regulons in the  mmSYGNAL model with <span class='badge'> **", length(total_oa_regs), " </span> OVERACTIVE** regulons (filtered for Drug constrained regulon activity > 0.8).\n")
+cat("\n\n")
+
+cat(sep="", "* <span class='badge'><a href='/P76156_6_Analysis.html#analysis_soc'>**", length(soc_stats$oa_regs), "**</a> </span> of these regulons were OVERACTIVE for <span class='badge'>**", length(soc_stats$drugs), "** </span> **Glioblastoma SOC** drug(s) that included <span class='badge'>**",length(soc_stats$targets), "** </span> target(s).\n")
+cat("\n\n")
+
+cat(sep="", "* <span class='badge'><a href='/P76156_6_Analysis.html#analysis_gbmtrials'>**", length(gbmtrials_stats$oa_regs), "**</a> </span>of these regulons were OVERACTIVE for <span class='badge'>**", length(gbmtrials_stats$drugs), "** </span> drug(s) that are in **Clinical Trials for GBM** that included <span class='badge'>**",length(gbmtrials_stats$targets), "** </span> target(s).\n")
+cat("\n\n")
+
+cat(sep="", "* <span class='badge'><a href='/P76156_6_Analysis.html#analysis_fda'>**", length(fdaappr_stats$oa_regs), "**</a> </span> of these regulons were OVERACTIVE for <span class='badge'> **", length(fdaappr_stats$drugs), "** </span> drug(s) that are **FDA Approved** for other indications that included <span class='badge'> **",length(fdaappr_stats$targets), "** </span> target(s).\n")
+cat("\n\n")
+
+cat(sep="", "*  DNA sequence analysis showed that patient has <span class='badge'> **<a href='/P76156_6_Mutation_Analysis.html#patient_mutations'>", mutation_count, "** </a> </span> mutations in <span class='badge'> **", mutation_gene_count,"** </span> unique genes with frequency greater than 20%.\n")
+cat("\n\n")
+
+cat(sep="", "*  Of these mutations <span class='badge'>**<a href='/P76156_6_Mutation_Analysis.html#cgi_mutations'>", length(mutations_cgi$MUTATION),"</a>** </span> identified as **cancer driver** mutations based on the analysis performed through 'Cancer Genome Interpreter'. In addition, <span class='badge'> **<a href='/P76156_6_Mutation_Analysis.html#cgi_prescriptions'>", length(prescriptions_cgi$SAMPLE_ALTERATION), "</a>** </span> of these mutations were alterations described as biomarkers for a different tumor type as interpreted by Cancer Genome Interpreter.\n")
+cat("\n\n")
+```
+
+```{r filtertable_function,echo=F, warning=F, message=F, results='asis'}
+filter_table <- function(network_data_input){
+  # separate target genes if there are more than one per drug
+  network_data_input_long <- network_data_input %>%
+    separate_rows(`Target Gene(s)`, sep=",")
+  
+  tmp9 <- tibble()
+for(target in unique(network_data_input_long$`Target Gene(s)`)){
+  
+  network_data <- network_data_input_long %>%
+    filter(`Target Gene(s)` %in% target)
+  
+  drugs <- unique(network_data$Drug)
+  drug_mech <- paste0(unique(network_data$`Drug Mechanism`), collapse = ", ")
+  reg_activity <- unique(round(network_data$`Drug Constrained Regulon Activity`, digits = 2))
+  reg_activity_sum <-  paste0(unique(network_data$`Regulon Activity Summary`))
+  gbm_phase <-  paste0(unique(network_data$max_glioblastoma.multiforme_phase))
+  pmid <- if_else(!is.na(unique(network_data$PMID)), unique(network_data$PMID) %>%
+    length(), unique(as.integer(0)))
+  
+  trials <- vector()
+  for(drug in drugs){
+    trials0 <- filter(ct, grepl(unique(drug), toupper(Interventions)))$NCT.Number
+    trials <- append(trials, trials0)
+  }
+  trials <- unique(trials)
+  
+  trials1 <- if_else(length(trials) !=0, length(trials), unique(as.integer(0)))
+  
+   #cat("target:", target, "drugs:", drugs, "mech:", drug_mech, "act:", reg_activity, "sum:", reg_activity_sum, "phase:", gbm_phase, "pmid:", pmid, "trials:", paste0(trials1, collapse=","), "\n")
+  
+  tmp00 <- tibble(Target = paste0('<a href="/P76156_6_Analysis.html#',target, '">', target,'</a>'), `Drug(s)`= paste0(drugs, collapse=", "), `Drug Mechanism` = drug_mech, `Regulon Activity` = reg_activity,`Regulon Activity Summary` = reg_activity_sum, `GBM Trial Phase` = gbm_phase, pmid, `GBM Trials` = trials1) %>%
+    mutate(Literature = if_else(pmid !=0, pmid, as.integer(0))) %>%
+    select(-pmid) %>%
+    unique()
+    
+  
+  tmp9 <- unique(bind_rows(tmp9, tmp00)) %>%
+    arrange(desc(`Regulon Activity`), desc(Literature), desc(`GBM Trials`))
+  
+}
+return(tmp9)
+}
+
+
+```
+
+
+
+## List of Top ranked targets
+```{r Summary_Tables, echo=F, warning=F, message=F,results='asis'}
+# Help information
+tags$div(align='right',
+bs_button(" ? ", button_type = "primary", button_size = "small") %>%
+  bs_attach_collapse("ranked_targets")
+)
+
+bs_collapse(
+  id = "ranked_targets", 
+    content = tags$div(class = "well", "A table of SYGNAL predicted targets, associated drugs and other relevant information from the network model and other resources are presented. A given target(s) may have more than one drug associated. Clicking on the target name will take you to the more detailed information for the given target and associated drugs. Table is mainly rank ordered based on the Regulon Activity, Literature Evidence and presence/absence of GBM related trials.\n ",
+                    tags$p(tags$b("Short description of fields")),
+                     tags$ul(
+                       tags$li("Target: Drug target from the network that is predicted to be associated with disease progression."),
+                       tags$li("Drug(s) that are associated with given target"),
+                       tags$li("Drug Mechanism: Mechanism of the drug. If there are more than one drug, multiple mechanisms are collapsed with ':'"),
+                       tags$li("Regulon activity: Measure of how active is the regulon(s) that are associated with the target in the patient's tumor."),
+                       tags$li("Regulon Activity Summary: Count of Overactive(O), Underactive(U) or All (A) regulons in the patient."),
+                       tags$li("GBM Trials: How many trials match to listed drugs in GBM."),
+                       tags$li("Literature Evidence: Number of curated literature evidence for the target and GBM. Click on the target name to get more details.")
+))
+)
+
+
+
+
+tmp11 <- filter_table(network_info_soc)
+tmp22 <- filter_table(network_info_gbmtrials)
+tmp33 <- filter_table(network_info_fda)
+```
+
+### Glioblastoma SOC 
+```{r, results='asis', echo=F, warning=F, message=F}
+datatable(tmp11,
+          escape=F,
+           extensions = 'RowGroup',
+           options = list(dom='',
+                          bPaginate = F#,
+                          #rowGroup = list(dataSrc = c(4))
+                          )
+           )
+
+```
+
+### Glioblastoma Clinical Trials
+```{r, results='asis', echo=F, warning=F, message=F}
+datatable(tmp22,
+          escape=F,
+           extensions = 'RowGroup',
+           options = list(dom=''#, 
+                          #rowGroup = list(dataSrc = c(4))
+                          )
+           )
+
+```
+
+### Drugs FDA Approved for other indications 
+```{r, results='asis', echo=F, warning=F, message=F}
+datatable(tmp33,
+          escape=F,
+           extensions = 'RowGroup',
+           options = list(dom='',
+                          bPaginate = F#,
+                          #rowGroup = list(dataSrc = c(4))
+                          )
+           )
+
+```
+
+## Patient Mutations
+```{r mutation_summary, results='asis', echo=F, warning=F, message=F}
+cat(sep="", '<a name="Mutations"></a>')
+cat(sep="", "### Mutations identified as driver(s)\n")
+
+tags$div(align='right',
+bs_button(" ? ", button_type = "primary", button_size = "small") %>%
+  bs_attach_collapse("cgi_mutations")
+)
+
+bs_collapse(
+  id = "cgi_mutations", 
+  content = tags$div(class = "well", "The interpretation of the patients mutations was performed through a report obtained from ",
+                     tags$a('Cancer Genome Interpreter', href='https://www.cancergenomeinterpreter.org'), " database. Cancer Genome Interpreter annotates the biological and clinical relevance of tumor alterations. For more information see ", 
+                     tags$a('Tamborero et al.,', href='https://www.biorxiv.org/content/10.1101/140475v3'),
+                     "\n", 
+                     tags$p(tags$b("BOOSTDM_DS/Oncogenicity")),
+                     tags$ul(
+                       tags$li("Driver according to BoostDM tissue specific model: a model built from mutations observed in this gene in this tumor type."),
+                       tags$li("Driver according to BoostDM non tissue specific model: a model built from mutations observed in this gene in other tumor type."),
+                       tags$li("Driver according to OncodriveMUT: there is no tissue specific or non-specific model to evaluate this mutation or indel; hence it is classified as driver through a set of rules implemented by OncodriveMUT."),
+                       tags$li("Passenger: Classified as passenger through a BoostDM model or OncodriveMUT"),
+                       tags$li("Non-affecting: Non-protein affecting mutation.")
+))
+)
+
+
+
+datatable(mutations_cgi,
+          escape=F,
+           extensions = 'RowGroup',
+           options = list(dom='',
+                          bPaginate = F#,
+                          #rowGroup = list(dataSrc = c(4))
+                          )
+           )
+
+```
+
+### Alterations described as biomarkers 
+```{r prescription_summary, results='asis', echo=F, warning=F, message=F}
+tags$div(align='right',
+bs_button(" ? ", button_type = "primary", button_size = "small") %>%
+  bs_attach_collapse("prescriptions")
+)
+
+bs_collapse(
+  id = "prescriptions", 
+    content = tags$div(class = "well", "A biomarkers report as obtained from ",
+                     tags$a('Cancer Genome Interpreter', href='https://www.cancergenomeinterpreter.org'), " database. It contains the putative biomarkers of drug response found in the tumor organized according to distinct levels of clinical relevance.\n", tags$p(tags$b("Response")),
+                     tags$ul(
+                       tags$li("Responsive: the genomic alteration is associated to sensitivity to the drug"),
+                       tags$li("No responsive: the genomic alteration is not associated to sensitivity to the drug"),
+                       tags$li("Resistant: the genomic alteration is associated to resistance to the drug"),
+                       tags$li("Increased toxicity: the genomic alteration enhances the toxicity related to the use of the drug")
+),
+tags$p(tags$b("Evidence")),
+                     tags$ul(
+                       tags$li("Level A: corresponds to biomarkers used in professional guidelines of FDA approved drugs."),
+                       tags$li("Level B: groups biomarkers observed in clinical trials."),
+                       tags$li("Level C: corresponds to biomarkers identified from small group studies or case studies."),
+                       tags$li("Level D: biomarkers have been identified in pre-clinical studies.")
+))
+)
+
+
+datatable(prescriptions_cgi,
+          escape=F,
+           extensions = 'RowGroup',
+           options = list(dom='',
+                          bPaginate = F#,
+                          #rowGroup = list(dataSrc = c(4))
+                          )
+           )
+
+```
+

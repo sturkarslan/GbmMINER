@@ -1,0 +1,26 @@
+name: "XCures"
+output_dir: ../docs
+navbar:
+  title: "SYGNOMICS Patient Report"
+  left:
+    - text: "Summary"
+      href: "index.html"
+    - text: "P76156 2020"
+      menu:
+        - text: "P76156 2020 Network"
+          href: P76156_3_Analysis.html
+        - text: "P76156 2020 Mutations"
+          href: P76156_3_Mutation_Analysis.html
+    - text: "P76156 2021"
+      menu:
+        - text: "P76156 2021 Network"
+          href: P76156_6_Analysis.html
+        - text: "P76156 2021 Mutations"
+          href: P76156_6_Mutation_Analysis.html
+output:
+  #workflowr::wflow_html:
+    toc: no
+    toc_float: no
+    theme: flatly
+    highlight: textmate
+    css: style.css

@@ -1,0 +1,20 @@
+h3 {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size:large;
+    color: #ff5722;
+}
+
+h3:after {
+    content: '';
+    border-top: 1px solid #e7dfdf;
+    margin: 0 20px 0 0;
+    flex: 1 0 20px;
+}
+
+h3:after {
+    margin: 0 0 0 20px;
+}

@@ -447,6 +447,21 @@ def zscore(expressionData):
     print("completed z-transformation.")
     return transform
 
+def zscore0(expressionData):
+    zero = np.percentile(expressionData,0)
+    meanCheck = np.mean(expressionData[expressionData>zero].mean(axis=1,skipna=True))
+    if meanCheck<0.1:
+        return expressionData
+    means = expressionData.mean(axis=0,skipna=True)
+    stds = expressionData.std(axis=0,skipna=True)
+    try:
+        transform = ((expressionData.T - means)/stds).T
+    except:
+        passIndex = np.where(stds>0)[0]
+        transform = ((expressionData.iloc[passIndex,:].T - means[passIndex])/stds[passIndex]).T
+    print("completed z-transformation.")
+    return transform
+
 def correctBatchEffects(df): 
     
     zscoredExpression = zscore(df)
@@ -1070,7 +1085,7 @@ def biclusterMembershipDictionary(revisedClusters,background,label=2,p=0.05):
             members[key] = []
             continue
         members[key] = list(background.columns[overExpMembers])
-    print("biclusterMembershipDictionary is done!")
+    #print("biclusterMembershipDictionary is done!")
     return members
 
 def membershipToIncidence(membershipDictionary,expressionData):
