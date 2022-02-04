@@ -10,7 +10,7 @@ library(reshape2)
 library(data.table)
 
 ## Load cohort regulon activity data
-all_patient_reg_activity <- read_csv("../data/drug_constrained_network_activity_allcohort.csv")
+all_patient_reg_activity <- read_csv("data/drug_constrained_network_activity_allcohort.csv")
 
 #### Function for histogram
 ## Plots cohort activities as histogram  for a given drug and indicates where patient falls.

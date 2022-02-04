@@ -15,7 +15,7 @@ library(data.table)
 source("code/regulon_enrichment.R")
 
 ############### function  for pathway enrichment ###############
-drug_pathway_enrichment <- function(input.df) {
+drug_pathway_enrichment <- function(input.df, regulons) {
   # drug pathway enrichment
   drugs_all_regulon_pathways <- data.frame()
 
