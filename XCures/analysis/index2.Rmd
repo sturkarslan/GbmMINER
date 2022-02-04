@@ -58,22 +58,22 @@ clinical_trials <- read.delim("../data/Glioblastoma_ClinicalTrials_01092022.txt"
 
 ```{r load data, echo=FALSE, message=FALSE,warning=FALSE}
 # Load patient data
-patient_id = patient_id
-filename <- paste("output/",patient_id, "/", patient_id, "_drug_therapy_activity.csv",sep="")
-        network_info <-
-            read_csv(
-                filename,
-                col_types = cols(`All Regulon(s)` = col_character(), 
-        `Overactive Regulon(s)` = col_character(), 
-        `Underactive Regulon(s)` = col_character(), 
-        `All Program(s)` = col_character(), 
-        `Overactive Program(s)` = col_character(), 
-        `Underactive Program(s)` = col_character(), 
-        Mutations = col_character(), Regulators = col_character(), 
-        MutatedDetail = col_character())
-            )
-        network_info <- network_info %>%
-          filter(`Drug Constrained Regulon Activity` > 0.8)
+# patient_id = patient_id
+# filename <- paste("output/",patient_id, "/", patient_id, "_drug_therapy_activity.csv",sep="")
+#         network_info <-
+#             read_csv(
+#                 filename,
+#                 col_types = cols(`All Regulon(s)` = col_character(), 
+#         `Overactive Regulon(s)` = col_character(), 
+#         `Underactive Regulon(s)` = col_character(), 
+#         `All Program(s)` = col_character(), 
+#         `Overactive Program(s)` = col_character(), 
+#         `Underactive Program(s)` = col_character(), 
+#         Mutations = col_character(), Regulators = col_character(), 
+#         MutatedDetail = col_character())
+#             )
+#         network_info <- network_info %>%
+#           filter(`Drug Constrained Regulon Activity` > 0.8)
 
 ```
 

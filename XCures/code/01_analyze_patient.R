@@ -3,7 +3,7 @@ library(fs)
 # Runs network and drug mapping for individual patients
 ###############################################################
 
-analyze_patient <- function(sample.id, activity_filter=0.8)
+analyze_patient <- function(sample.id, activity_filter=0.8,analysis_type)
 {
 
   # define input directories
@@ -47,13 +47,18 @@ analyze_patient <- function(sample.id, activity_filter=0.8)
   #write.csv(drug_info_pr, "../data/GBM_Master_Drugs_Mapped_CMFlows_120921_with_regulons.csv")
 
   # Get list of all mutation files from XCures folder
-  mutation_files <- fs::dir_ls(dna_dir, regexp =".annotated.txt" )
+  if(analysis_type == "TEMPUS"){
+    mutation_files <- fs::dir_ls(dna_dir, regexp =".annotated.txt" )
+  } else {
+    mutation_files <- fs::dir_ls(dna_dir, regexp ="_somatic.tsv" )
+  }
+
 
 
   ################### Mapping ##################################
   # drug mapping for regulons
   tic("Mapping drugs...")
-  drugs_all <- map_drugs(drug_info_pr,sample.id = sample.id, disease = FALSE, network_dir = network_dir_input, mutation_files = mutation_files, analysis_type="TEMPUS")
+  drugs_all <- map_drugs(drug_info_pr,sample.id = sample.id, disease = FALSE, network_dir = network_dir_input, mutation_files = mutation_files, analysis_type=analysis_type)
   toc()
 
   ################## Get Network Details ##################################
@@ -70,7 +75,7 @@ analyze_patient <- function(sample.id, activity_filter=0.8)
   # ################### Get Functional Enrichment ##################################
   # get pathway information
   tic("Performing pathway enrichment...")
-  drugs_all_pathways <- drug_pathway_enrichment(input.df = drugs_all_details_filt)
+  drugs_all_pathways <- drug_pathway_enrichment(input.df = drugs_all_details_filt, regulons)
   toc()
 
   drugs_all_pathways_ordered <- drugs_all_pathways %>%
